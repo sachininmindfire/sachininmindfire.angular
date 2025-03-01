@@ -1,72 +1,58 @@
-# Preserve .git Folder During Angular Build
+# Adding Free JSON API Tool to Homepage
 
-## Problem
-When running `npm run build`, the Angular build process cleans the dist directory, which also removes the `.git` folder. This is problematic as it breaks Git version control in the distribution directory.
+## Overview
+Add a link for the Free JSON API tool that opens in a new browser tab when clicked.
 
-## Solution
-Create a custom build script that will:
-1. Back up the .git folder before build
-2. Execute the Angular build
-3. Restore the .git folder after build
+## Implementation Plan
 
-## Implementation Steps
-
-1. Modify package.json to add a new build script:
-```json
+### 1. Update ContentService
+Add the new tool to the tools signal array in ContentService:
+```typescript
 {
-  "scripts": {
-    "prebuild": "node scripts/backup-git.js",
-    "build": "ng build",
-    "postbuild": "node scripts/restore-git.js"
-  }
+  id: 2,
+  title: 'Free JSON API',
+  description: 'Access free JSON APIs for testing and prototyping',
+  date: '2024-03-01',
+  link: 'https://sachininmindfire.github.io/free-api/',
+  type: 'tool'
 }
 ```
 
-2. Create a new directory for build scripts:
-```
-mkdir scripts
-```
+### 2. Update Content Card Component
+The content-card component needs to be implemented to display content items:
+- Add input property for ContentItem
+- Create template with title, description, and link
+- Add target="_blank" for external tool links
+- Style appropriately for different content types
 
-3. Create backup-git.js:
-```javascript
-const fs = require('fs-extra');
-const path = require('path');
+### 3. Update Featured Tool Component
+Implement the featured-tool component:
+- Use content-card to display tool items
+- Add input property for tool ContentItem
+- Style to highlight featured tools
 
-const gitPath = path.resolve(__dirname, '../../sachininmindfire.github.io/dist/.git');
-const backupPath = path.resolve(__dirname, '../.git-backup');
+### 4. Update Home Component
+Update home component to display tools:
+- Inject ContentService
+- Get latest tools using getLatestTools signal
+- Display tools using featured-tool component
+- Add section for featured tools
 
-// Check if .git exists and backup
-if (fs.existsSync(gitPath)) {
-  fs.copySync(gitPath, backupPath);
-  console.log('.git folder backed up successfully');
-}
-```
+### 5. Update Tools Component
+Implement tools component to show all tools:
+- Inject ContentService
+- Get tools using getLatestTools signal
+- Display tools using content-card component
+- Add grid/list layout for multiple tools
 
-4. Create restore-git.js:
-```javascript
-const fs = require('fs-extra');
-const path = require('path');
+## Technical Considerations
+- External links should open in new tabs (target="_blank")
+- Consider adding rel="noopener noreferrer" for security on external links
+- Ensure responsive design for tool cards
+- Add appropriate hover states and animations for better UX
 
-const gitPath = path.resolve(__dirname, '../../sachininmindfire.github.io/dist/.git');
-const backupPath = path.resolve(__dirname, '../.git-backup');
-
-// Restore .git if backup exists
-if (fs.existsSync(backupPath)) {
-  fs.copySync(backupPath, gitPath);
-  fs.removeSync(backupPath);
-  console.log('.git folder restored successfully');
-}
-```
-
-5. Install required dependency:
-```bash
-npm install fs-extra --save-dev
-```
-
-## Usage
-After implementation, the regular `npm run build` command will automatically:
-1. Back up the .git folder
-2. Run the Angular build
-3. Restore the .git folder
-
-This ensures the Git repository remains intact while still allowing clean builds.
+## Next Steps
+1. Switch to Code mode to implement these changes
+2. Start with ContentService update as it's the foundation
+3. Implement components in order: content-card, featured-tool, home, tools
+4. Test all links and interactions

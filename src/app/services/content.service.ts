@@ -43,6 +43,14 @@ export class ContentService {
       date: '2024-02-25',
       link: 'https://sachininmindfire.github.io/sql-poco-app/',
       type: 'tool'
+    },
+    {
+      id: 2,
+      title: 'Free JSON API',
+      description: 'Access free JSON APIs for testing and prototyping',
+      date: '2024-03-01',
+      link: 'https://sachininmindfire.github.io/free-api/',
+      type: 'tool'
     }
   ]);
 

@@ -1,74 +1,42 @@
-import { Component } from '@angular/core';
-import { BioComponent } from '../../shared/bio/bio.component';
-import { FeaturedToolComponent } from '../../shared/featured-tool/featured-tool.component';
-import { ContentCardComponent } from '../../shared/content-card/content-card.component';
+import { Component, computed, inject } from '@angular/core';
 import { ContentService } from '../../../services/content.service';
-import { Signal } from '@angular/core';
-import { ContentItem } from '../../../services/content.service';
+import { FeaturedToolComponent } from '../../shared/featured-tool/featured-tool.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [BioComponent, FeaturedToolComponent, ContentCardComponent],
+  imports: [FeaturedToolComponent],
   template: `
-    <section class="hero">
-      <app-bio />
-      <app-featured-tool />
-    </section>
-
-    <section class="latest-content">
-      <h2>Latest Content</h2>
-      <div class="content-grid">
-        <div class="content-section">
-          <h3>Recent Articles</h3>
-          <div class="content-cards">
-            @for (article of articles(); track article.id) {
-              <app-content-card [content]="article" />
-            }
-          </div>
-        </div>
-
-        <div class="content-section">
-          <h3>Latest Tips</h3>
-          <div class="content-cards">
-            @for (tip of tips(); track tip.id) {
-              <app-content-card [content]="tip" />
-            }
-          </div>
-        </div>
-
-        <div class="content-section">
-          <h3>New Tools</h3>
-          <div class="content-cards">
-            @for (tool of tools(); track tool.id) {
-              <app-content-card [content]="tool" />
-            }
-          </div>
-        </div>
-
-        <div class="content-section">
-          <h3>Recent Terms</h3>
-          <div class="content-cards">
-            @for (term of terms(); track term.id) {
-              <app-content-card [content]="term" />
-            }
-          </div>
-        </div>
+    <section class="home">
+      <h2>Featured Tools</h2>
+      <div class="tools-grid">
+        @for (tool of tools(); track tool.id) {
+          <app-featured-tool [tool]="tool"></app-featured-tool>
+        }
       </div>
     </section>
   `,
-  styleUrl: './home.component.scss'
+  styles: [`
+    .home {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      margin-bottom: 2rem;
+      color: var(--text-color);
+      font-size: 1.5rem;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+  `]
 })
 export class HomeComponent {
-  articles: Signal<ContentItem[]>;
-  tips: Signal<ContentItem[]>;
-  tools: Signal<ContentItem[]>;
-  terms: Signal<ContentItem[]>;
-
-  constructor(private contentService: ContentService) {
-    this.articles = this.contentService.getLatestArticles;
-    this.tips = this.contentService.getLatestTips;
-    this.tools = this.contentService.getLatestTools;
-    this.terms = this.contentService.getLatestTerms;
-  }
+  private contentService = inject(ContentService);
+  tools = this.contentService.getLatestTools;
 }
