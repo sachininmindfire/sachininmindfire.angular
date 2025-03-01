@@ -51,6 +51,14 @@ export class ContentService {
       date: '2024-03-01',
       link: 'https://sachininmindfire.github.io/free-api/',
       type: 'tool'
+    },
+    {
+      id: 3,
+      title: 'SQL to ER-Diagram',
+      description: 'Convert SQL queries to Entity Relationship Diagrams',
+      date: '2024-03-01',
+      link: 'https://sachininmindfire.github.io/sql-diagrams/',
+      type: 'tool'
     }
   ]);
 
