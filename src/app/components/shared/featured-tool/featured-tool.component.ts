@@ -8,7 +8,7 @@ import { ContentCardComponent } from '../content-card/content-card.component';
   imports: [ContentCardComponent],
   template: `
     <div class="featured-tool">
-      <h3>Featured Tool</h3>
+      <!-- <h3>Featured Tool</h3> -->
       <app-content-card [content]="tool"></app-content-card>
     </div>
   `,
