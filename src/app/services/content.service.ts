@@ -39,7 +39,7 @@ export class ContentService {
     {
       id: 1,
       title: 'SQL POCO Generator',
-      description: 'Generate POCO classes from SQL Server tables',
+      description: 'Free online tool to convert SQL scripts to POCO classes Or T4 Template classes. Supports multiple programming languages including C#, Java, TypeScript and more.',
       date: '2025-02-25',
       link: 'https://sachininmindfire.github.io/sql-poco-app/',
       type: 'tool'
@@ -47,7 +47,7 @@ export class ContentService {
     {
       id: 2,
       title: 'Free JSON API',
-      description: 'Access free JSON APIs for testing and prototyping',
+      description: 'Access free JSON APIs for testing and prototyping. Online tool to generate sample JSON API responses for testing and development. Explore different API categories and customize response formats.',
       date: '2025-03-01',
       link: 'https://sachininmindfire.github.io/free-api/',
       type: 'tool'
@@ -55,7 +55,7 @@ export class ContentService {
     {
       id: 3,
       title: 'SQL to ER-Diagram',
-      description: 'Convert SQL queries to Entity Relationship Diagrams',
+      description: 'Convert SQL queries to Entity Relationship Diagrams. Generate database ER diagrams from SQL scripts. Tool is fully created using vanilla JavaScript. No server calls, hence feel safe of uploading sql files Or pasting scripts here.',
       date: '2025-03-01',
       link: 'https://sachininmindfire.github.io/sql-diagrams/',
       type: 'tool'

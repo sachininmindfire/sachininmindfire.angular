@@ -4,9 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "prebuild": "node scripts/backup-git.js",
     "build": "ng build",
-    "postbuild": "node scripts/restore-git.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:tech-blog": "node dist/tech-blog/server/server.mjs"

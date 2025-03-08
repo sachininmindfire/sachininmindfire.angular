@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
     <div class="bio-container">
       <h1>Welcome to My Technical Blog</h1>
       <p>
-        I'm Sachin, a software developer passionate about creating efficient solutions
+        I'm Sachin, a software developer and architect passionate about creating efficient solutions
         and sharing knowledge.
       </p>
       <div class="expertise-areas">
