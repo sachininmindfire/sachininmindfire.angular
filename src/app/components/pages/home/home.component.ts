@@ -12,6 +12,14 @@ import { BioComponent } from "../../shared/bio/bio.component";
        <app-bio />
      </section>
     <div class="container">
+    <section class="home">
+      <h2>Featured Tools</h2>
+      <div class="tools-grid">
+        @for (tool of tools(); track tool.id) {
+          <app-featured-tool [tool]="tool"></app-featured-tool>
+        }
+      </div>
+    </section>
       <h2>Recent Publications</h2>
       
       <div class="row mt-4">
@@ -65,14 +73,7 @@ import { BioComponent } from "../../shared/bio/bio.component";
       </div>
     </div>
 
-    <section class="home">
-      <h2>Featured Tools</h2>
-      <div class="tools-grid">
-        @for (tool of tools(); track tool.id) {
-          <app-featured-tool [tool]="tool"></app-featured-tool>
-        }
-      </div>
-    </section>
+   
   `,
   styles: [`
     .home {

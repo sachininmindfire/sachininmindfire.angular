@@ -7,7 +7,8 @@ import { Component } from '@angular/core';
     <div class="bio-container">
       <h1>Welcome to My Technical Blog</h1>
       <p>
-        I'm Sachin, a software developer and architect passionate about creating efficient solutions
+        This blog intent is to help software developers and architects passionate about creating efficient software solutions. There are common tools sometimes looks easy but difficult to find. 
+        This blog is a collection of those tools and tips. I am a software engineer with over 10 years of experience in the industry, specializing in full-stack development, database design, and cloud architecture. I have a passion for building scalable applications and optimizing performance. I believe in the power of collaboration and continuous learning, and I am always eager to connect with fellow developers to exchange ideas
         and sharing knowledge.
       </p>
       <div class="expertise-areas">
@@ -36,8 +37,8 @@ import { Component } from '@angular/core';
   styles: [`
     .bio-container {
       max-width: 800px;
-      margin: 2rem auto;
-      padding: 2rem;
+      margin: 0rem auto;
+      padding: .5rem;
       text-align: center;
       background: var(--card-bg);
       border-radius: 12px;

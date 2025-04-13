@@ -67,6 +67,22 @@ export class ContentService {
       date: '2025-03-02',
       link: 'https://sachininmindfire.github.io/text-diff/',
       type: 'tool'
+    },
+    {
+      id: 5,
+      title: 'MD to PDF Converter',
+      description: 'Convert Markdown files to PDF format easily. A simple, fast tool for transforming your markdown documentation into professional PDF documents.',
+      date: '2025-03-03',
+      link: 'https://sachininmindfire.github.io/md-pdf-convertor/',
+      type: 'tool'
+    },
+    {
+      id: 6,
+      title: 'JSON Formatter',
+      description: 'Format and validate your JSON data with this easy-to-use tool. Features pretty printing, syntax validation, and structure visualization.',
+      date: '2025-03-04',
+      link: 'https://sachininmindfire.github.io/json-formatter/',
+      type: 'tool'
     }
   ]);
 
