@@ -41,7 +41,7 @@ export class ContentService {
       title: 'SQL POCO Generator',
       description: 'Free online tool to convert SQL scripts to POCO classes Or T4 Template classes. Supports multiple programming languages including C#, Java, TypeScript and more.',
       date: '2025-02-25',
-      link: 'https://sachininmindfire.github.io/sql-poco-app/',
+      link: '/sql-poco-app/',
       type: 'tool'
     },
     {
@@ -49,7 +49,7 @@ export class ContentService {
       title: 'Free JSON API',
       description: 'Access free JSON APIs for testing and prototyping. Online tool to generate sample JSON API responses for testing and development. Explore different API categories and customize response formats.',
       date: '2025-03-01',
-      link: 'https://sachininmindfire.github.io/free-api/',
+      link: '/free-api/',
       type: 'tool'
     },
     {
@@ -57,7 +57,7 @@ export class ContentService {
       title: 'SQL to ER-Diagram',
       description: 'Convert SQL queries to Entity Relationship Diagrams. Generate database ER diagrams from SQL scripts. Tool is fully created using vanilla JavaScript. No server calls, hence feel safe of uploading sql files Or pasting scripts here.',
       date: '2025-03-01',
-      link: 'https://sachininmindfire.github.io/sql-diagrams/',
+      link: '/sql-diagrams/',
       type: 'tool'
     },
     {
@@ -65,7 +65,7 @@ export class ContentService {
       title: 'Text Diff',
       description: 'Compare and analyze text differences visually',
       date: '2025-03-02',
-      link: 'https://sachininmindfire.github.io/text-diff/',
+      link: '/text-diff/',
       type: 'tool'
     },
     {
@@ -73,7 +73,7 @@ export class ContentService {
       title: 'MD to PDF Converter',
       description: 'Convert Markdown files to PDF format easily. A simple, fast tool for transforming your markdown documentation into professional PDF documents.',
       date: '2025-03-03',
-      link: 'https://sachininmindfire.github.io/md-pdf-convertor/',
+      link: '/md-pdf-convertor/',
       type: 'tool'
     },
     {
@@ -81,7 +81,7 @@ export class ContentService {
       title: 'JSON Formatter',
       description: 'Format and validate your JSON data with this easy-to-use tool. Features pretty printing, syntax validation, and structure visualization.',
       date: '2025-03-04',
-      link: 'https://sachininmindfire.github.io/json-formatter/',
+      link: '/json-formatter/',
       type: 'tool'
     }
   ]);

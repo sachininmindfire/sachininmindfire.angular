@@ -13,7 +13,7 @@ Add the new tool to the tools signal array in ContentService:
   title: 'Free JSON API',
   description: 'Access free JSON APIs for testing and prototyping',
   date: '2024-03-01',
-  link: 'https://sachininmindfire.github.io/free-api/',
+  link: '/free-api/',
   type: 'tool'
 }
 ```

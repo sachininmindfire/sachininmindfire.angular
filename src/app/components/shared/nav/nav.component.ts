@@ -48,27 +48,27 @@ export class NavComponent {
   @Input() tools: MenuItem[] = [
     {
       text: 'SQL POCO Generator',
-      link: 'https://sachininmindfire.github.io/sql-poco-app/'
+      link: '/sql-poco-app/'
     },
     {
       text: 'Free JSON API',
-      link: 'https://sachininmindfire.github.io/free-api/'
+      link: '/free-api/'
     },
     {
       text: 'SQL to ER-Diagram',
-      link: 'https://sachininmindfire.github.io/sql-diagrams/'
+      link: '/sql-diagrams/'
     },
     {
       text: 'Text Diff',
-      link: 'https://sachininmindfire.github.io/text-diff/'
+      link: '/text-diff/'
     },
     {
       text: 'MD to PDF Converter',
-      link: 'https://sachininmindfire.github.io/md-pdf-convertor/'
+      link: '/md-pdf-convertor/'
     },
     {
       text: 'JSON Formatter',
-      link: 'https://sachininmindfire.github.io/json-formatter/'
+      link: '/json-formatter/'
     }
   ];
 }
