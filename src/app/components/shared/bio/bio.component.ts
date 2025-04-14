@@ -52,6 +52,7 @@ import { Component } from '@angular/core';
     h1 {
       color: var(--primary-color);
       margin-bottom: 1rem;
+      margin-top: 0rem;
       font-size: 2rem;
     }
 

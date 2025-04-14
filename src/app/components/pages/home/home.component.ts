@@ -13,10 +13,10 @@ import { BioComponent } from "../../shared/bio/bio.component";
         <app-bio />
       </section>
       <div class="profile-image">
-        <img 
-          src="" 
-          alt="Profile Picture" 
-         
+        <img
+          src="/assets/images/profile.jpg"
+          alt="Profile Picture"
+          (error)="handleImageError($event)"
         />
       </div>
     </div>
@@ -85,9 +85,10 @@ import { BioComponent } from "../../shared/bio/bio.component";
    
   `,
   styles: [`
+    
     .hero-container {
       display: flex;
-      gap: 2rem;
+      gap: 1rem;
       align-items: flex-start;
       max-width: 1200px;
       margin: 0 auto;
@@ -99,8 +100,15 @@ import { BioComponent } from "../../shared/bio/bio.component";
     }
 
     .profile-image {
-      flex: 0 0 250px;
-      margin-top: 2rem;
+      flex: 0 0 320px;
+      margin: 2rem 0 0 -1rem;
+      max-width: 100%;
+    }
+
+    .profile-image img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .profile-image img {
