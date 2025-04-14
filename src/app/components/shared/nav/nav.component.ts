@@ -7,12 +7,15 @@ interface MenuItem {
 
 @Component({
   selector: 'app-nav',
+  standalone: true,
   template: `
     <nav>
       <ul>
-        <li *ngFor="let item of tools">
-          <a [href]="item.link">{{ item.text }}</a>
-        </li>
+        @for (item of tools; track item.link) {
+          <li>
+            <a [href]="item.link">{{ item.text }}</a>
+          </li>
+        }
       </ul>
     </nav>
   `,

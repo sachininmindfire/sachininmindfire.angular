@@ -8,9 +8,18 @@ import { BioComponent } from "../../shared/bio/bio.component";
   standalone: true,
   imports: [FeaturedToolComponent, BioComponent],
   template: `    
-    <section class="hero">
-       <app-bio />
-     </section>
+    <div class="hero-container">
+      <section class="hero">
+        <app-bio />
+      </section>
+      <div class="profile-image">
+        <img 
+          src="" 
+          alt="Profile Picture" 
+         
+        />
+      </div>
+    </div>
     <div class="container">
     <section class="home">
       <h2>Featured Tools</h2>
@@ -29,12 +38,12 @@ import { BioComponent } from "../../shared/bio/bio.component";
               <h3>Recent Articles</h3>
             </div>
             <div class="list-group list-group-flush">
-              <a *ngFor="let article of articles" 
-                href="#"
-                class="list-group-item list-group-item-action">
-                {{ article.title }}
-                <small class="text-muted d-block">{{ article.publishDate }}</small>
-              </a>
+              <!-- @for (article of articles; track article.title) {
+                <a href="#" class="list-group-item list-group-item-action">
+                  {{ article.title }}
+                  <small class="text-muted d-block">{{ article.publishDate }}</small>
+                </a>
+              } -->
             </div>
           </div>
         </div>
@@ -45,12 +54,12 @@ import { BioComponent } from "../../shared/bio/bio.component";
               <h3>Recent Tips</h3>
             </div>
             <div class="list-group list-group-flush">
-              <a *ngFor="let tip of tips" 
-                href="#" 
-                class="list-group-item list-group-item-action">
-                {{ tip.title }}
-                <small class="text-muted d-block">{{ tip.publishDate }}</small>
-              </a>
+              <!-- @for (tip of tips; track tip.title) {
+                <a href="#" class="list-group-item list-group-item-action">
+                  {{ tip.title }}
+                  <small class="text-muted d-block">{{ tip.publishDate }}</small>
+                </a>
+              } -->
             </div>
           </div>
         </div>
@@ -61,12 +70,12 @@ import { BioComponent } from "../../shared/bio/bio.component";
               <h3>Recent Terms</h3>
             </div>
             <div class="list-group list-group-flush">
-              <a *ngFor="let term of terms" 
-                href="#" 
-                class="list-group-item list-group-item-action">
-                {{ term.term }}
-                <small class="text-muted d-block">{{ term.category }}</small>
-              </a>
+              <!-- @for (term of terms; track term.term) {
+                <a href="#" class="list-group-item list-group-item-action">
+                  {{ term.term }}
+                  <small class="text-muted d-block">{{ term.category }}</small>
+                </a>
+              } -->
             </div>
           </div>
         </div>
@@ -76,6 +85,41 @@ import { BioComponent } from "../../shared/bio/bio.component";
    
   `,
   styles: [`
+    .hero-container {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .hero {
+      flex: 1;
+    }
+
+    .profile-image {
+      flex: 0 0 250px;
+      margin-top: 2rem;
+    }
+
+    .profile-image img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      .hero-container {
+        flex-direction: column-reverse;
+      }
+      
+      .profile-image {
+        margin: 0 auto;
+        max-width: 200px;
+      }
+    }
+
     .home {
       padding: 2rem;
       max-width: 1200px;
@@ -140,5 +184,13 @@ import { BioComponent } from "../../shared/bio/bio.component";
 export class HomeComponent {
   private contentService = inject(ContentService);
   tools = this.contentService.getLatestTools;
+  articles = []; // Add your articles data here
+  tips = []; // Add your tips data here
+  terms = []; // Add your terms data here
+
+  handleImageError(event: any) {
+    event.target.src = '../assets/images/default-profile.png';
+    console.error('Failed to load profile image');
+  }
 }
 

@@ -5,32 +5,36 @@ import { Component } from '@angular/core';
   standalone: true,
   template: `
     <div class="bio-container">
-      <h1>Welcome to My Technical Blog</h1>
-      <p>
-        This blog intent is to help software developers and architects passionate about creating efficient software solutions. There are common tools sometimes looks easy but difficult to find. 
-        This blog is a collection of those tools and tips. I am a software engineer with over 10 years of experience in the industry, specializing in full-stack development, database design, and cloud architecture. I have a passion for building scalable applications and optimizing performance. I believe in the power of collaboration and continuous learning, and I am always eager to connect with fellow developers to exchange ideas
-        and sharing knowledge.
-      </p>
-      <div class="expertise-areas">
-        <h3>Areas of Expertise</h3>
-        <ul class="expertise-list">
-          <li>
-            <i class="fas fa-code"></i>
-            <span>Full Stack Development</span>
-          </li>
-          <li>
-            <i class="fas fa-database"></i>
-            <span>Database Design & Optimization</span>
-          </li>
-          <li>
-            <i class="fas fa-cloud"></i>
-            <span>Cloud Architecture</span>
-          </li>
-          <li>
-            <i class="fas fa-tools"></i>
-            <span>Developer Tools</span>
-          </li>
-        </ul>
+      <div class="bio-content">
+        <div class="bio-text">
+          <h1>Welcome to My Technical Blog</h1>
+          <p>
+            This blog intent is to help software developers and architects passionate about creating efficient software solutions. There are common tools sometimes looks easy but difficult to find. 
+            This blog is a collection of those tools and tips. I am a software engineer with over 10 years of experience in the industry, specializing in full-stack development, database design, and cloud architecture. I have a passion for building scalable applications and optimizing performance. I believe in the power of collaboration and continuous learning, and I am always eager to connect with fellow developers to exchange ideas
+            and sharing knowledge.
+          </p>
+          <div class="expertise-areas">
+            <h3>Areas of Expertise</h3>
+            <ul class="expertise-list">
+              <li>
+                <i class="fas fa-code"></i>
+                <span>Full Stack Development</span>
+              </li>
+              <li>
+                <i class="fas fa-database"></i>
+                <span>Database Design & Optimization</span>
+              </li>
+              <li>
+                <i class="fas fa-cloud"></i>
+                <span>Cloud Architecture</span>
+              </li>
+              <li>
+                <i class="fas fa-tools"></i>
+                <span>Developer Tools</span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   `,
@@ -91,6 +95,33 @@ import { Component } from '@angular/core';
         }
       }
     }
+
+    .bio-content {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .bio-text {
+      flex: 1;
+      text-align: left;
+    }
+
+    @media (max-width: 768px) {
+      .bio-content {
+        flex-direction: column-reverse;
+      }
+      
+      .bio-text {
+        text-align: center;
+      }
+    }
   `]
 })
-export class BioComponent {}
+export class BioComponent {
+  handleImageError(event: any) {
+    event.target.src = '../assets/images/default-profile.png';
+    console.error('Failed to load profile image');
+  }
+}
