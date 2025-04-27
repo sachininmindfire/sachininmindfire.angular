@@ -1,20 +1,20 @@
 import { Component, Input } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { ContentItem } from '../../../services/content.service';
 import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-content-card',
   standalone: true,
-  imports: [RouterLink, DatePipe],
+  imports: [DatePipe],
   template: `
     <div class="content-card">
       <h4 class="card-title">
-        @if (content.link.startsWith('http')) {
+        <a [href]="content.link" target="_blank">{{ content.title }}</a>
+        <!-- @if (content.link.startsWith('http')) {
           <a [href]="content.link" target="_blank">{{ content.title }}</a>
         } @else {
           <a [routerLink]="content.link">{{ content.title }}</a>
-        }
+        } -->
       </h4>
       <p class="card-description">{{ content.description }}</p>
       <div class="card-meta">
