@@ -2,11 +2,12 @@ import { Component, computed, inject } from '@angular/core';
 import { ContentService } from '../../../services/content.service';
 import { FeaturedToolComponent } from '../../shared/featured-tool/featured-tool.component';
 import { BioComponent } from "../../shared/bio/bio.component";
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FeaturedToolComponent, BioComponent],
+  imports: [FeaturedToolComponent, BioComponent, RouterLink],
   templateUrl: './home.component.html' ,
   styleUrl: './home.component.scss' 
 })

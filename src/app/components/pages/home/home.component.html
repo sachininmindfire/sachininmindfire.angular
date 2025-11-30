@@ -20,7 +20,14 @@
     </div>
 </section>
     <h2>Recent Publications</h2>
-    <h2><a href="/articles" >Articles</a></h2>
+    <h2>
+        <a href="/articles" >Articles</a>        
+    </h2>
+    <h2>
+        <a [routerLink]="['/text-diff']" queryParamsHandling="merge">
+            Text Diff
+        </a>
+    </h2>
     <div class="row mt-4">
     <div class="col-md-4">
         <div class="card">

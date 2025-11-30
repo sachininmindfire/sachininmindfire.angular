@@ -1,0 +1,35 @@
+
+<div class="container">
+    <!-- Top Controls -->
+    <div class="controls">
+        <button id="compareBtn" class="action-btn">Compare</button>
+        <button id="toggleBtn" class="action-btn">Toggle</button>
+        <button id="clearBtn" class="action-btn">Clear</button>
+    </div>
+    <div class="comparison-wrapper">
+        <!-- Left Panel -->
+        <div class="panel left-panel">
+            <div class="file-input">
+                <button class="file-btn" onclick="chooseFile('left')">Open</button>                    
+                <input type="text" id="leftFileName" placeholder="Enter filename" class="filename-input">
+                <button class="save-btn" onclick="saveText('left')">Save As</button>
+            </div>
+            <textarea id="leftText" placeholder="Enter text for comparison..." class="text-area"></textarea>
+            <pre id="leftDiff" class="diff-display" style="display: none;"></pre>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="panel right-panel">
+            <div class="file-input">
+                <button class="file-btn" onclick="chooseFile('right')">Open</button>
+                <input type="text" id="rightFileName" placeholder="Enter filename" class="filename-input">                    
+                <button class="save-btn" onclick="saveText('right')">Save As</button>
+            </div>
+            <textarea id="rightText" placeholder="Enter text for comparison..." class="text-area"></textarea>
+            <pre id="rightDiff" class="diff-display" style="display: none;"></pre>
+        </div>
+    </div>
+</div>
+<script src="js/diffHandler.js"></script>
+<script src="js/fileHandler.js"></script>
+<script src="js/main.js"></script>
