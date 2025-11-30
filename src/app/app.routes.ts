@@ -7,6 +7,7 @@ import { TermsComponent } from './components/pages/terms/terms.component';
 import { NotFoundComponent } from './components/error/not-found/not-found.component';
 import { ServerErrorComponent } from './components/error/server-error/server-error.component';
 import { TextDiffComponent } from './components/pages/tools/text-diff/text-diff.component';
+import { JsonPrettifierComponent } from './components/pages/tools/json-prettifier/json-prettifier.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -17,5 +18,6 @@ export const routes: Routes = [
   { path: 'error', component: ServerErrorComponent },
   { path: '404', component: NotFoundComponent },
   { path: 'text-diff', component: TextDiffComponent },
+  { path: 'json-prettifier', component: JsonPrettifierComponent},
   { path: '**', redirectTo: '404' }
 ];

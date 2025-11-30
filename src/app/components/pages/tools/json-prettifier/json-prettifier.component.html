@@ -1,0 +1,28 @@
+<div class="container" role="region" aria-label="JSON Prettifier">
+  <div class="controls" role="toolbar" aria-label="Actions">
+    <button type="button" (click)="prettify()" [disabled]="!jsonControl.value?.trim()">Prettify</button>
+    <button type="button" (click)="clear()">Clear</button>
+    <button type="button" (click)="copy()" class="copy-btn" [disabled]="!jsonOutput">Copy</button>
+  </div>
+
+  <div class="panes">
+    <div class="input-pane">
+      <!-- use reactive FormControl binding -->
+      <textarea
+        [formControl]="jsonControl"
+        placeholder="Paste your JSON here..."
+        aria-label="JSON input"
+        rows="12"
+      ></textarea>
+    </div>
+
+    <div class="output-pane" aria-live="polite">
+      <ng-container *ngIf="jsonOutput; else emptyState">
+        <pre><code [innerText]="jsonOutput" class="language-json"></code></pre>
+      </ng-container>
+      <ng-template #emptyState>
+        <div class="empty">Formatted JSON will appear here.</div>
+      </ng-template>
+    </div>
+  </div>
+</div>
