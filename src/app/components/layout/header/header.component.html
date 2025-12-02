@@ -1,0 +1,40 @@
+<header class="site-header">
+  <div class="header-container">
+    <div class="logo-container">
+      <a href="/" class="site-logo">
+        <span class="logo-text">Dev Tools</span>
+      </a>
+    </div>
+
+    <nav class="main-nav">
+      <button class="mobile-menu-button" aria-label="Toggle menu">
+        <span class="menu-icon"></span>
+      </button>
+
+      <ul class="nav-links">
+        <li class="nav-item dropdown">
+          <a href="#" class="dropdown-toggle">Tools</a>
+          <ul class="dropdown-menu">
+            <li>
+              <a [routerLink]="['/text-diff']" queryParamsHandling="merge">
+                Text Diff
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="['/json-prettifier']" queryParamsHandling="merge">
+                Json Prettifier
+              </a>
+            </li>
+            <li><a href="https://sachininmindfire.github.io/sql-poco-app/">SQL POCO Generator</a></li>
+            <li><a href="https://sachininmindfire.github.io/sql-diagrams/">SQL Diagrams</a></li>
+            <!-- Add more tools as needed -->
+          </ul>
+        </li>
+        <li class="nav-item"><a href="https://sachininmindfire.github.io/blog/">Blog</a></li>
+        <li class="nav-item"><a href="https://sachininmindfire.github.io/tutorials/">Tutorials</a></li>
+        <li class="nav-item"><a href="https://sachininmindfire.github.io/about/">About</a></li>
+        <li class="nav-item"><a href="https://sachininmindfire.github.io/contact/">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
