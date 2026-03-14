@@ -17,12 +17,11 @@
     </div>
 
     <div class="output-pane" aria-live="polite">
-      <ng-container *ngIf="jsonOutput; else emptyState">
+      @if (jsonOutput) {
         <pre><code [innerText]="jsonOutput" class="language-json"></code></pre>
-      </ng-container>
-      <ng-template #emptyState>
+      } @else {
         <div class="empty">Formatted JSON will appear here.</div>
-      </ng-template>
+      }
     </div>
   </div>
 </div>

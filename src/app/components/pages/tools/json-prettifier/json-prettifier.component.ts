@@ -1,7 +1,7 @@
 // ...existing code...
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -10,7 +10,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
   styleUrls: ['./json-prettifier.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [ReactiveFormsModule]
 })
 export class JsonPrettifierComponent {
   jsonControl = new FormControl('');
