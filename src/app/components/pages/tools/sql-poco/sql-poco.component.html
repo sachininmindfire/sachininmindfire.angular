@@ -1,0 +1,54 @@
+<form >
+  <section class="converter">
+    <div class="input-section">
+      <h2>Input SQL Script</h2>
+      <div class="code-input-wrapper">
+        <textarea id="sqlInput" class="code-input" placeholder="-- Paste your SQL script here
+  CREATE TABLE Users (
+      UserId INT PRIMARY KEY,
+      Username VARCHAR(50) NOT NULL,
+      Email VARCHAR(100) NOT NULL
+  );"></textarea>
+      </div>
+      <div class="controls">
+        <select id="languageSelect" class="language-select">
+          <option value="csharp">C#</option>
+          <option value="java">Java</option>
+          <option value="typescript">TypeScript</option>
+          <option value="python">Python</option>
+        </select>
+        <button id="convertBtn" class="convert-btn" (click)="handleConversion" >Generate POCO</button>
+      </div>
+    </div>
+
+    <div class="output-section">
+      <h2>Generated Code</h2>
+      <div class="code-output-wrapper">
+        <pre><code id="outputCode" class="language-csharp"></code></pre>
+      </div>
+      <button id="copyBtn" class="copy-btn">Copy Code</button>
+    </div>
+  </section>
+</form>
+
+<section class="features">
+  <h2>Features</h2>
+  <div class="feature-grid">
+    <div class="feature-item">
+      <h3>Multi-Language Support</h3>
+      <p>Generate code in C#, Java, TypeScript, and more</p>
+    </div>
+    <div class="feature-item">
+      <h3>Instant Conversion</h3>
+      <p>Get your POCO classes in seconds</p>
+    </div>
+    <div class="feature-item">
+      <h3>Free to Use</h3>
+      <p>No registration required</p>
+    </div>
+    <div class="feature-item">
+      <h3>Clean Code</h3>
+      <p>Generated code follows best practices</p>
+    </div>
+  </div>
+</section>

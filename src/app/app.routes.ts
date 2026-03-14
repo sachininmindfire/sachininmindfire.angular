@@ -8,6 +8,7 @@ import { NotFoundComponent } from './components/error/not-found/not-found.compon
 import { ServerErrorComponent } from './components/error/server-error/server-error.component';
 import { TextDiffComponent } from './components/pages/tools/text-diff/text-diff.component';
 import { JsonPrettifierComponent } from './components/pages/tools/json-prettifier/json-prettifier.component';
+import { SqlPocoComponent } from './components/pages/tools/sql-poco/sql-poco.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -18,6 +19,7 @@ export const routes: Routes = [
   { path: 'error', component: ServerErrorComponent },
   { path: '404', component: NotFoundComponent },
   { path: 'text-diff', component: TextDiffComponent },
-  { path: 'json-prettifier', component: JsonPrettifierComponent},
+  { path: 'json-prettifier', component: JsonPrettifierComponent },
+  { path: 'sql-poco', component: SqlPocoComponent },
   { path: '**', redirectTo: '404' }
 ];
