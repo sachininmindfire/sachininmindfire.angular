@@ -41,7 +41,7 @@ export class ContentService {
       title: 'SQL POCO Generator',
       description: 'Free online tool to convert SQL scripts to POCO classes Or T4 Template classes. Supports multiple programming languages including C#, Java, TypeScript and more.',
       date: '2025-02-25',
-      link: '/sql-poco-app/',
+      link: '/sql-poco/',
       type: 'tool'
     },
     {
@@ -73,7 +73,7 @@ export class ContentService {
       title: 'MD to PDF Converter',
       description: 'Convert Markdown files to PDF format easily. A simple, fast tool for transforming your markdown documentation into professional PDF documents.',
       date: '2025-03-03',
-      link: '/md-pdf-convertor/',
+      link: '/md-pdf-convertor',
       type: 'tool'
     },
     {
