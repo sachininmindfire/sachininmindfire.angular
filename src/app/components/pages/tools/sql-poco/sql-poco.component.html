@@ -1,34 +1,41 @@
-<form >
-  <section class="converter">
-    <div class="input-section">
-      <h2>Input SQL Script</h2>
-      <div class="code-input-wrapper">
-        <textarea id="sqlInput" class="code-input" placeholder="-- Paste your SQL script here
-  CREATE TABLE Users (
-      UserId INT PRIMARY KEY,
-      Username VARCHAR(50) NOT NULL,
-      Email VARCHAR(100) NOT NULL
-  );"></textarea>
-      </div>
-      <div class="controls">
-        <select id="languageSelect" class="language-select">
-          <option value="csharp">C#</option>
-          <option value="java">Java</option>
-          <option value="typescript">TypeScript</option>
-          <option value="python">Python</option>
-        </select>
-        <button id="convertBtn" class="convert-btn" (click)="handleConversion" >Generate POCO</button>
-      </div>
+<form (submit)="onSubmit($event)">
+<section class="converter">
+  <div class="input-section">
+    <h2>Input SQL Script</h2>
+      @if(form.inputSql().touched() && !form.inputSql().value().trim()){
+          <span class="error">SQL script is required</span>
+      }
+    <div class="code-input-wrapper">
+      <textarea id="sqlInput" class="code-input" [formField]="form.inputSql" placeholder="-- Paste your SQL script here
+CREATE TABLE Users (
+    UserId INT PRIMARY KEY,
+    Username VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) NOT NULL
+);"></textarea>
+        
     </div>
+    @if(form.languageType().touched() && !form.languageType().value().trim()){
+          <span class="error">Language selection is required</span>
+      }
+    <div class="controls">
+      <select id="languageSelect" class="language-select" [formField]="form.languageType" >
+        <option value="csharp">C#</option>
+        <option value="java">Java</option>
+        <option value="typescript">TypeScript</option>
+        <option value="python">Python</option>
+      </select>
+      <button type="submit" id="convertBtn" class="convert-btn" >Generate POCO</button>
+    </div>
+  </div>
 
-    <div class="output-section">
-      <h2>Generated Code</h2>
-      <div class="code-output-wrapper">
-        <pre><code id="outputCode" class="language-csharp"></code></pre>
-      </div>
-      <button id="copyBtn" class="copy-btn">Copy Code</button>
+  <div class="output-section">
+    <h2>Generated Code</h2>
+    <div class="code-output-wrapper">
+      <pre><code #outputCode id="outputCode" class="language-csharp"></code></pre>
     </div>
-  </section>
+    <button #copyBtn type="button" id="copyBtn" (click)="copyToClipboard()" class="copy-btn">Copy Code</button>
+  </div>
+</section>
 </form>
 
 <section class="features">

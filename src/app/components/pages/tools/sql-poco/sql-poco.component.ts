@@ -1,25 +1,28 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, signal } from '@angular/core';
 import { ConfigService } from '../../../../services/config.service';
-// import {form, FormField} from '@angular/forms/signals';
+import {form, FormField} from '@angular/forms/signals';
 
-interface formData {
-  inputSql: string,
-  languageType: string
+interface SqlPocoFormModel {
+  inputSql: string;
+  languageType: string;
 }
 
 @Component({
   selector: 'app-sql-poco',
+  standalone: true,
+  imports: [FormField],
   templateUrl: './sql-poco.component.html',
   styleUrls: ['./sql-poco.component.scss']
 })
 export class SqlPocoComponent {
-  // formModel = signal<formData>({
+  formModel = signal<SqlPocoFormModel>({
+    inputSql: '',
+    languageType: 'csharp'
+  });
+  
+  form = form(this.formModel);
 
-  // }) 
 
-
-
-  @ViewChild('sqlInput') sqlInput!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('outputCode') outputCode!: ElementRef<HTMLElement>;
   @ViewChild('copyBtn') copyBtn!: ElementRef<HTMLButtonElement>;
   language: string = 'csharp';
@@ -27,8 +30,7 @@ export class SqlPocoComponent {
 
   constructor(private config: ConfigService) { }
 
-  async handleConversion(): Promise<void> {
-    const sql = this.sqlInput.nativeElement.value.trim();
+  async handleConversion(sql: string, language: string): Promise<void> {
     if (!sql) {
       alert('Please enter a SQL script');
       return;
@@ -39,7 +41,7 @@ export class SqlPocoComponent {
       const response = await fetch(`${this.config.API_BASE_URL}/api/poco/convert`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sqlScript: sql, language: this.language })
+        body: JSON.stringify({ sqlScript: sql, language })
       });
 
       if (!response.ok) {
@@ -100,7 +102,27 @@ export class SqlPocoComponent {
 
   onLanguageChange(): void {
     if (this.outputCode.nativeElement.textContent) {
-      this.handleConversion();
+      const sql = this.form.inputSql().value().trim();
+      const language = this.form.languageType().value();
+      if (sql) {
+        this.language = language;
+        this.handleConversion(sql, language);
+      }
     }
+  }
+
+  async onSubmit(event: SubmitEvent) {
+    event.preventDefault();
+
+    const sql = this.form.inputSql().value().trim();
+    const language = this.form.languageType().value();
+
+    if (!sql) {
+      this.form.inputSql().markAsTouched();
+      return;
+    }
+
+    this.language = language;
+    await this.handleConversion(sql, language);
   }
 }

@@ -102,6 +102,19 @@ main {
   min-width: 150px;
 }
 
+.language-csharp {
+  color: blue
+}
+.language-java{
+  color: #2563eb;
+}
+.language-typescript{
+  color: #64748b;
+}
+.language-python{
+  color: blueviolet;
+}
+
 .convert-btn, .copy-btn {
   padding: 0.5rem 1.5rem;
   background-color: var(--primary-color);
@@ -114,7 +127,7 @@ main {
 }
 
   .convert-btn:hover, .copy-btn:hover {
-    background-color: var(--secondary-color);
+    background-color: blueviolet;
   }
 
 .copy-btn {
@@ -166,4 +179,8 @@ main {
   color: var(--success-color);
   margin-top: 0.5rem;
   font-size: 0.9rem;
+}
+
+.error{
+  color: red;
 }
