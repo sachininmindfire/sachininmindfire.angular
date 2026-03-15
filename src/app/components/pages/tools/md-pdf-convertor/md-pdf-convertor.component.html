@@ -1,0 +1,46 @@
+<div
+  #panelContainer
+  class="container"
+  [class.preview-fullscreen]="isPreviewFullscreen"
+  [style.gridTemplateColumns]="getGridTemplateColumns()"
+>
+  <div class="panel left-panel" [class.hidden]="isPreviewFullscreen">
+    <h2>Markdown Input</h2>
+    <textarea
+      [(ngModel)]="markdownInput"
+      (input)="onMarkdownInput()"
+      id="markdown-input"
+      placeholder="Enter your markdown here..."
+    ></textarea>
+
+    <div class="file-upload">
+      <input #fileInput type="file" id="file-input" accept=".md,.markdown" (change)="onFileSelected($event)">
+      <button type="button" id="upload-btn" (click)="onUploadClick(fileInput)">Upload Markdown File</button>
+    </div>
+  </div>
+
+  <div
+    class="resize-handle"
+    [class.hidden]="isPreviewFullscreen"
+    [class.active]="isResizingPreview"
+    (mousedown)="onResizeStart($event)"
+    aria-label="Resize preview panel"
+    role="separator"
+  ></div>
+
+  <div class="panel right-panel">
+    <div class="panel-header">
+      <h2>PDF Preview</h2>
+      <button type="button" id="fullscreen-toggle" (click)="togglePreviewFullscreen()">
+        {{ isPreviewFullscreen ? 'Exit Full Screen' : 'Full Screen' }}
+      </button>
+    </div>
+    <div #pdfPreview id="pdf-preview" [innerHTML]="previewHtml"></div>
+
+    <div class="download-buttons">
+      <button type="button" id="download-pdf" [disabled]="isProcessing" (click)="onDownloadPdf()">
+        {{ isProcessing ? 'Processing...' : 'Download PDF' }}
+      </button>
+    </div>
+  </div>
+</div>

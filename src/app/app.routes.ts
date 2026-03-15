@@ -21,5 +21,12 @@ export const routes: Routes = [
   { path: 'text-diff', component: TextDiffComponent },
   { path: 'json-prettifier', component: JsonPrettifierComponent },
   { path: 'sql-poco', component: SqlPocoComponent },
+  {
+    path: 'md-pdf-convertor',
+    loadComponent: () =>
+      import('./components/pages/tools/md-pdf-convertor/md-pdf-convertor.component').then(
+        (m) => m.MdPdfConvertorComponent
+      )
+  },
   { path: '**', redirectTo: '404' }
 ];
