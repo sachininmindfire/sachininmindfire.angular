@@ -1,0 +1,54 @@
+<main class="page-shell">
+  <section class="panel">
+    <header>      
+      <h1>{{ title() }}</h1>
+      <p class="lead">
+        Paste SQL DDL and configure diagram options. The form uses Angular signal forms APIs.
+      </p>
+    </header>
+
+    <form [formRoot]="sqlForm" class="builder-form">
+      <label for="diagramName">Diagram Name</label>
+      <input id="diagramName" type="text" [formField]="sqlForm.diagramName" placeholder="inventory-schema" />
+      @if (firstError(sqlForm.diagramName); as error) {
+        <p class="error-text">{{ error }}</p>
+      }
+
+      <label for="sql">SQL Script</label>
+      <textarea
+        id="sql"
+        [formField]="sqlForm.sql"
+        rows="12"
+        placeholder="CREATE TABLE ..."
+      ></textarea>
+      @if (firstError(sqlForm.sql); as error) {
+        <p class="error-text">{{ error }}</p>
+      }
+
+      <label class="checkbox-row" for="includeColumns">
+        <input id="includeColumns" type="checkbox" [formField]="sqlForm.includeColumns" />
+        Include column-level fields in exported diagram
+      </label>
+
+      <button type="submit" class="primary-btn">Generate Diagram</button>
+    </form>
+
+    <section class="result">
+      <h2>Preview</h2>
+      <p>Detected tables: {{ tableCount() }}</p>
+      <p>{{ generatedMessage() }}</p>
+
+      @if (mermaidCode()) {
+        <div class="mermaid-code">
+          <h3>Mermaid Source</h3>
+          <pre>{{ mermaidCode() }}</pre>
+        </div>
+
+        <div class="mermaid-diagram" [innerHTML]="mermaidSvg()"></div>
+        <button type="button" class="secondary-btn" (click)="downloadDiagram()" [disabled]="!mermaidSvgMarkup()">
+          Save Diagram
+        </button>
+      }
+    </section>
+  </section>
+</main>

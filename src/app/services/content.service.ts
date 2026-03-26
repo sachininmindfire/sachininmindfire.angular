@@ -57,7 +57,7 @@ export class ContentService {
       title: 'SQL to ER-Diagram',
       description: 'Convert SQL queries to Entity Relationship Diagrams. Generate database ER diagrams from SQL scripts. Tool is fully created using vanilla JavaScript. No server calls, hence feel safe of uploading sql files Or pasting scripts here.',
       date: '2025-03-01',
-      link: '/sql-diagrams/',
+      link: '/sql-diagram/',
       type: 'tool'
     },
     {

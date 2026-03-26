@@ -9,6 +9,7 @@ import { ServerErrorComponent } from './components/error/server-error/server-err
 import { TextDiffComponent } from './components/pages/tools/text-diff/text-diff.component';
 import { JsonPrettifierComponent } from './components/pages/tools/json-prettifier/json-prettifier.component';
 import { SqlPocoComponent } from './components/pages/tools/sql-poco/sql-poco.component';
+import { SqlDiagramComponent } from './components/pages/tools/sql-diagram/sql-diagram.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -21,6 +22,7 @@ export const routes: Routes = [
   { path: 'text-diff', component: TextDiffComponent },
   { path: 'json-prettifier', component: JsonPrettifierComponent },
   { path: 'sql-poco', component: SqlPocoComponent },
+  { path: 'sql-diagram', component: SqlDiagramComponent},
   {
     path: 'md-pdf-convertor',
     loadComponent: () =>
