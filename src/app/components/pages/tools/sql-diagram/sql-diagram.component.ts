@@ -54,7 +54,7 @@ export class SqlDiagramComponent {
   constructor(private readonly sanitizer: DomSanitizer) {}
 
   protected readonly formModel = signal<SqlDiagramFormModel>({
-    diagramName: 'ecommerce-schema',
+    diagramName: 'posts-schema',
     sql: `CREATE TABLE users (
         id INT PRIMARY KEY,
         username VARCHAR(50),
