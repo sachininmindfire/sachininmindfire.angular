@@ -1,0 +1,62 @@
+<main class="page-shell">
+  <section class="panel">
+    <header>
+      <h1>{{ title() }}</h1>
+      <p class="lead">
+        Fetch data from the external API by specifying category and count.
+      </p>
+    </header>
+
+    <form [formRoot]="apiForm" class="builder-form">
+      <label for="category">Category</label>
+      <input id="category" type="text" [formField]="apiForm.category" placeholder="general" />
+      @if (firstError(apiForm.category); as error) {
+        <p class="error-text">{{ error }}</p>
+      }
+
+      <label for="count">Count</label>
+      <input id="count" type="number" [formField]="apiForm.count" placeholder="5" />
+      @if (firstError(apiForm.count); as error) {
+        <p class="error-text">{{ error }}</p>
+      }
+
+      <button type="submit" class="primary-btn">Fetch Data</button>
+    </form>
+
+    <section class="result">
+      <h2>Response</h2>
+      <p>{{ responseMessage() }}</p>
+
+      @if (isLoading()) {
+        <div class="loading-state">⏳ Loading data, please wait...</div>
+      }
+
+      @if (responseData()) {
+        <div class="response-display" [innerHTML]="responseData()"></div>
+        <button type="button" class="secondary-btn" (click)="copyRawResponse()" [disabled]="isLoading()">
+          Copy Raw Response
+        </button>
+      }
+
+      <section class="snippets">
+        <h3>API Usage Snippets</h3>
+        <p>Use the following examples to call this API in different languages. The category/count values are automatically generated from your input.</p>
+
+        <h4>JavaScript</h4>
+        <pre><code>{{ codeSnippets()['javascript'] }}</code></pre>
+
+        <h4>TypeScript</h4>
+        <pre><code>{{ codeSnippets()['typescript'] }}</code></pre>
+
+        <h4>C#</h4>
+        <pre><code>{{ codeSnippets()['csharp'] }}</code></pre>
+
+        <h4>Java</h4>
+        <pre><code>{{ codeSnippets()['java'] }}</code></pre>
+
+        <h4>Python</h4>
+        <pre><code>{{ codeSnippets()['python'] }}</code></pre>
+      </section>
+    </section>
+  </section>
+</main>

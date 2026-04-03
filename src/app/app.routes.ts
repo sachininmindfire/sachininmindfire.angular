@@ -10,6 +10,8 @@ import { TextDiffComponent } from './components/pages/tools/text-diff/text-diff.
 import { JsonPrettifierComponent } from './components/pages/tools/json-prettifier/json-prettifier.component';
 import { SqlPocoComponent } from './components/pages/tools/sql-poco/sql-poco.component';
 import { SqlDiagramComponent } from './components/pages/tools/sql-diagram/sql-diagram.component';
+import { FreeApiComponent } from './components/pages/tools/free-api/free-api.component';
+import { MdPdfConvertorComponent } from './components/pages/tools/md-pdf-convertor/md-pdf-convertor.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -23,12 +25,7 @@ export const routes: Routes = [
   { path: 'json-prettifier', component: JsonPrettifierComponent },
   { path: 'sql-poco', component: SqlPocoComponent },
   { path: 'sql-diagram', component: SqlDiagramComponent},
-  {
-    path: 'md-pdf-convertor',
-    loadComponent: () =>
-      import('./components/pages/tools/md-pdf-convertor/md-pdf-convertor.component').then(
-        (m) => m.MdPdfConvertorComponent
-      )
-  },
+  { path: 'free-api', component: FreeApiComponent },
+  { path: 'md-pdf-convertor', component: MdPdfConvertorComponent },
   { path: '**', redirectTo: '404' }
 ];
