@@ -12,6 +12,9 @@ import { SqlPocoComponent } from './components/pages/tools/sql-poco/sql-poco.com
 import { SqlDiagramComponent } from './components/pages/tools/sql-diagram/sql-diagram.component';
 import { FreeApiComponent } from './components/pages/tools/free-api/free-api.component';
 import { MdPdfConvertorComponent } from './components/pages/tools/md-pdf-convertor/md-pdf-convertor.component';
+import { UtilityComponent } from './components/pages/utility/utility.component';
+import { RecipeMakerComponent } from './components/pages/utility/recipe-maker/recipe-maker.component';
+import { AboutComponent } from './components/pages/about/about.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -19,6 +22,8 @@ export const routes: Routes = [
   { path: 'tips', component: TipsComponent },
   { path: 'tools', component: ToolsComponent },
   { path: 'terms', component: TermsComponent },
+  { path: 'utility', component: UtilityComponent },
+  { path: 'recipe-maker', component: RecipeMakerComponent },
   { path: 'error', component: ServerErrorComponent },
   { path: '404', component: NotFoundComponent },
   { path: 'text-diff', component: TextDiffComponent },
@@ -27,5 +32,6 @@ export const routes: Routes = [
   { path: 'sql-diagram', component: SqlDiagramComponent},
   { path: 'free-api', component: FreeApiComponent },
   { path: 'md-pdf-convertor', component: MdPdfConvertorComponent },
+  { path: 'about', component: AboutComponent, title: 'About Me' },
   { path: '**', redirectTo: '404' }
 ];

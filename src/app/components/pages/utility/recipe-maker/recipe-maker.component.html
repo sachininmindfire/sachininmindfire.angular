@@ -1,0 +1,105 @@
+<div class="recipe-maker-form">
+    <h3>🍳 Recipe Maker</h3>
+    <h4>Enter ingredients you have, and AI will suggest 3 delicious recipes</h4>
+    
+    @if (errorMessage()) {
+        <div class="error-message">
+            {{ errorMessage() }}
+        </div>
+    }
+    
+    <form [formRoot]="recipeForm">
+        <div class="ingredients-section">
+            <div class="section-header">
+                <h5>📝 Ingredients</h5>
+                <button type="button" class="add-btn" (click)="addIngredient()" title="Add another ingredient">
+                    ➕ Add Ingredient
+                </button>
+            </div>
+            
+            <ul class="ingredient-list">
+                @for (ing of recipeForm; track $index) {
+                <li class="ingredient-row">
+                    <div class="ingredient-inputs">
+                        <input 
+                            [formField]="recipeForm[$index].name" 
+                            type="text" 
+                            placeholder="Ingredient name" 
+                            aria-label="Ingredient name"
+                            class="ingredient-name"
+                        />
+                        <input 
+                            [formField]="recipeForm[$index].quantity" 
+                            type="number" 
+                            placeholder="Qty" 
+                            aria-label="Ingredient quantity"
+                            class="ingredient-qty"
+                            step="0.1"
+                        />
+                        <select 
+                            [formField]="recipeForm[$index].unit"
+                            aria-label="Measurement unit"
+                            class="unit-dropdown"
+                        >
+                            @for (unit of unitOptions; track unit.id) {
+                                <option [value]="unit.id">{{ unit.label }}</option>
+                            }
+                        </select>
+                    </div>
+                    @if (recipeForm.length > 1) {
+                        <button 
+                            type="button" 
+                            class="remove-btn"
+                            (click)="removeIngredient($index)"
+                            title="Remove this ingredient"
+                            aria-label="Remove ingredient"
+                        >
+                            ❌
+                        </button>
+                    }
+                </li>
+                }
+            </ul>
+        </div>
+        
+        <button type="submit" class="submit-btn" [disabled]="isLoading()"> 
+            @if (isLoading()) {
+                <span class="loading-text">Fetching Recipes...</span>
+            } @else {
+                <span>🚀 Fetch Recipes</span>
+            }
+        </button>
+    </form>
+
+    @if (isLoading()) {
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Generating delicious recipes...</p>
+        </div>
+    }
+
+    @if (recipesResponse().recipes.length > 0) {
+        <div class="recipes-container">
+            <h3>Your Recipe Suggestions</h3>
+            @for (res of recipesResponse().recipes; track $index) {
+                <div class="recipe-card">
+                    <h4>{{ res.name }}</h4>
+                    
+                    <div class="recipe-section">
+                        <h5>📋 Ingredients:</h5>
+                        <ul class="recipe-ingredients">
+                            @for (ing of res.ingredients; track $index) {
+                                <li>{{ ing.name }} - {{ ing.quantity }} {{ ing.unit }}</li>
+                            }
+                        </ul>
+                    </div>
+                    
+                    <div class="recipe-section">
+                        <h5>👨‍🍳 Instructions:</h5>
+                        <p class="recipe-instructions">{{ res.instructions }}</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
