@@ -1,0 +1,392 @@
+<div class="rps-container">
+  <!-- Page Header -->
+  <header class="rps-header">
+    <div class="title-group">
+      <div class="badge-row">
+        <span class="cyber-badge">🤖 AI Vision Powered</span>
+        <span class="cyber-badge neon-green">Client-Side ML</span>
+      </div>
+      <h1 class="main-title">Rock <span class="gradient-text">Paper</span> Scissors</h1>
+      <p class="subtitle">
+        Play against an AI opponent using your webcam and real-time hand gesture recognition!
+      </p>
+    </div>
+
+    <!-- Match Options Bar -->
+    <div class="settings-bar">
+      <div class="setting-group">
+        <label>Format:</label>
+        <div class="btn-toggle-group">
+          <button
+            type="button"
+            class="toggle-btn"
+            [class.active]="matchFormat() === 'endless'"
+            (click)="setMatchFormat('endless')"
+          >
+            Endless
+          </button>
+          <button
+            type="button"
+            class="toggle-btn"
+            [class.active]="matchFormat() === 'best-of-3'"
+            (click)="setMatchFormat('best-of-3')"
+          >
+            Best of 3
+          </button>
+          <button
+            type="button"
+            class="toggle-btn"
+            [class.active]="matchFormat() === 'best-of-5'"
+            (click)="setMatchFormat('best-of-5')"
+          >
+            Best of 5
+          </button>
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <label>Difficulty:</label>
+        <div class="btn-toggle-group">
+          <button
+            type="button"
+            class="toggle-btn"
+            [class.active]="difficulty() === 'classic'"
+            (click)="setDifficulty('classic')"
+          >
+            Classic
+          </button>
+          <button
+            type="button"
+            class="toggle-btn"
+            [class.active]="difficulty() === 'smart'"
+            (click)="setDifficulty('smart')"
+          >
+            Smart AI
+          </button>
+          <button
+            type="button"
+            class="toggle-btn"
+            [class.active]="difficulty() === 'impossible'"
+            (click)="setDifficulty('impossible')"
+          >
+            Boss 😈
+          </button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button
+          type="button"
+          class="icon-btn"
+          [title]="soundEnabled() ? 'Mute sound' : 'Enable sound'"
+          (click)="toggleSound()"
+        >
+          {{ soundEnabled() ? '🔊' : '🔇' }}
+        </button>
+        <button type="button" class="btn-reset" (click)="resetGame()">
+          ↺ Reset Match
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Scoreboard -->
+  <section class="scoreboard-section">
+    <div class="score-card player-card">
+      <div class="score-label">YOU</div>
+      <div class="score-number">{{ playerScore() }}</div>
+    </div>
+
+    <div class="score-divider">
+      <div class="vs-text">VS</div>
+      <div class="ties-count">{{ drawScore() }} Ties</div>
+    </div>
+
+    <div class="score-card ai-card">
+      <div class="score-label">AI BOT</div>
+      <div class="score-number">{{ computerScore() }}</div>
+    </div>
+  </section>
+
+  <!-- Stats Ribbons -->
+  <div class="stats-ribbon">
+    <div class="stat-item">
+      <span class="stat-title">Win Streak:</span>
+      <span class="stat-value highlight">{{ currentStreak() }} 🔥</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-title">Best Streak:</span>
+      <span class="stat-value">{{ bestStreak() }} ⚡</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-title">Win Rate:</span>
+      <span class="stat-value">{{ winRate() }}%</span>
+    </div>
+  </div>
+
+  <!-- Match Winner Alert Banner -->
+  @if (matchWinner()) {
+    <div class="match-winner-banner" [class.win]="matchWinner() === 'player'" [class.lose]="matchWinner() === 'computer'">
+      <div class="winner-title">
+        @if (matchWinner() === 'player') {
+          🎉 MATCH VICTORY! You defeated the AI! 🏆
+        } @else {
+          🤖 AI WINS MATCH! Better luck next time!
+        }
+      </div>
+      <button type="button" class="btn-play-again" (click)="resetGame()">
+        Play Another Match
+      </button>
+    </div>
+  }
+
+  <!-- Battle Arena -->
+  <main class="battle-arena">
+    <!-- Left: Player Video & Gesture Panel -->
+    <div class="arena-side player-arena" [class.active-turn]="isRoundInProgress()">
+      <div class="arena-header">
+        <h3>👤 Your Hand</h3>
+        @if (isCameraActive()) {
+          <span class="status-pill active">● Camera Active</span>
+        } @else if (manualMode()) {
+          <span class="status-pill manual">⌨ Manual Mode</span>
+        } @else {
+          <span class="status-pill idle">○ Camera Inactive</span>
+        }
+      </div>
+
+      <!-- Camera Feed or Manual Panel -->
+      <div class="feed-container">
+        @if (isCameraActive()) {
+          <video
+            #videoPlayer
+            autoplay
+            playsinline
+            muted
+            class="video-feed"
+          ></video>
+          <canvas
+            #canvasOverlay
+            class="canvas-overlay"
+          ></canvas>
+
+          <!-- Live Detection Tag Overlay -->
+          <div class="live-gesture-tag" [class.detected]="currentDetectedGesture() !== 'none' && currentDetectedGesture() !== 'unknown'">
+            <span class="gesture-icon">{{ gestureIcons[currentDetectedGesture()] }}</span>
+            <span class="gesture-name">{{ gestureLabels[currentDetectedGesture()] }}</span>
+            @if (gestureConfidence() > 0) {
+              <span class="confidence-badge">{{ gestureConfidence() }}%</span>
+            }
+          </div>
+        } @else {
+          <div class="camera-placeholder">
+            @if (isCameraLoading()) {
+              <div class="loading-spinner"></div>
+              <p>Starting webcam stream & ML model...</p>
+            } @else if (cameraError()) {
+              <div class="error-box">
+                <span class="error-icon">⚠️</span>
+                <p>{{ cameraError() }}</p>
+                <button type="button" class="btn-primary" (click)="startCamera()">
+                  Retry Camera
+                </button>
+                <button type="button" class="btn-secondary" (click)="enableManualMode()">
+                  Switch to Manual Mode
+                </button>
+              </div>
+            } @else {
+              <div class="placeholder-content">
+                <div class="placeholder-icon">📷</div>
+                <h4>Enable Camera for Real-Time Gesture AI</h4>
+                <p>Allow camera access to play using real hand signs (✊ ✋ ✌️).</p>
+                <div class="button-stack">
+                  <button type="button" class="btn-primary start-cam-btn" (click)="startCamera()">
+                    🎥 Start Webcam
+                  </button>
+                  <button type="button" class="btn-ghost" (click)="enableManualMode()">
+                    Play with Buttons (No Camera)
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Player Controls -->
+      <div class="player-controls">
+        @if (isCameraActive()) {
+          <div class="camera-action-row">
+            <button
+              type="button"
+              class="btn-shoot"
+              [disabled]="isRoundInProgress() || !!matchWinner()"
+              (click)="startRound()"
+            >
+              {{ isRoundInProgress() ? 'Playing Round...' : '⚡ Play Round (Countdown)' }}
+            </button>
+            <button type="button" class="btn-stop-cam" (click)="stopCamera()" title="Stop Camera">
+              ⏹ Stop Cam
+            </button>
+          </div>
+        } @else {
+          <!-- Manual Move Selector -->
+          <div class="manual-buttons-panel">
+            <p class="manual-hint">Pick your gesture to play instantly:</p>
+            <div class="manual-button-row">
+              <button
+                type="button"
+                class="move-btn"
+                [disabled]="isRoundInProgress() || !!matchWinner()"
+                (click)="playManualMove('rock')"
+              >
+                <span class="btn-emoji">✊</span>
+                <span class="btn-text">Rock</span>
+              </button>
+              <button
+                type="button"
+                class="move-btn"
+                [disabled]="isRoundInProgress() || !!matchWinner()"
+                (click)="playManualMove('paper')"
+              >
+                <span class="btn-emoji">✋</span>
+                <span class="btn-text">Paper</span>
+              </button>
+              <button
+                type="button"
+                class="move-btn"
+                [disabled]="isRoundInProgress() || !!matchWinner()"
+                (click)="playManualMove('scissors')"
+              >
+                <span class="btn-emoji">✌️</span>
+                <span class="btn-text">Scissors</span>
+              </button>
+            </div>
+            @if (manualMode()) {
+              <button type="button" class="btn-link-cam" (click)="startCamera()">
+                🎥 Switch to Webcam Mode
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Center: Battle Clash Display & Countdown -->
+    <div class="arena-center">
+      @if (countdownValue() !== null) {
+        <div class="countdown-circle">
+          <span class="countdown-text">{{ countdownText() }}</span>
+        </div>
+      } @else if (playerMove() && computerMove()) {
+        <div class="clash-display" [class.win]="roundResult() === 'win'" [class.lose]="roundResult() === 'lose'" [class.draw]="roundResult() === 'draw'">
+          <div class="clash-moves">
+            <div class="clash-item player">
+              <span class="clash-emoji">{{ gestureIcons[playerMove()!] }}</span>
+              <span class="clash-label">You</span>
+            </div>
+            <div class="clash-vs">⚔️</div>
+            <div class="clash-item ai">
+              <span class="clash-emoji">{{ gestureIcons[computerMove()!] }}</span>
+              <span class="clash-label">Bot</span>
+            </div>
+          </div>
+          <div class="round-result-badge" [class.win]="roundResult() === 'win'" [class.lose]="roundResult() === 'lose'" [class.draw]="roundResult() === 'draw'">
+            {{ resultMessage() }}
+          </div>
+        </div>
+      } @else {
+        <div class="ready-badge">
+          <span class="ready-icon">🎮</span>
+          <span>Ready for battle!</span>
+        </div>
+      }
+    </div>
+
+    <!-- Right: AI Opponent Card -->
+    <div class="arena-side ai-arena">
+      <div class="arena-header">
+        <h3>🤖 AI Opponent</h3>
+        <span class="status-pill online">● Online</span>
+      </div>
+
+      <div class="ai-display-card">
+        <div class="bot-avatar">
+          <div class="hologram-ring"></div>
+          <div class="bot-icon">👾</div>
+        </div>
+
+        <div class="ai-move-reveal">
+          @if (isRoundInProgress()) {
+            <div class="ai-thinking">
+              <div class="pulse-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <span class="thinking-text">Deciding move...</span>
+            </div>
+          } @else if (computerMove()) {
+            <div class="revealed-move-box">
+              <span class="revealed-icon">{{ gestureIcons[computerMove()!] }}</span>
+              <span class="revealed-label">{{ gestureLabels[computerMove()!] }}</span>
+            </div>
+          } @else {
+            <div class="ai-idle-prompt">
+              <span>Waiting for round start...</span>
+            </div>
+          }
+        </div>
+
+        <div class="ai-mode-info">
+          <span class="mode-tag">{{ difficulty() | uppercase }} MODE</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Round History Table -->
+  @if (roundHistory().length > 0) {
+    <section class="history-section">
+      <h3>📜 Match History</h3>
+      <div class="history-grid">
+        @for (item of roundHistory(); track item.id; let idx = $index) {
+          <div class="history-card" [class.win]="item.result === 'win'" [class.lose]="item.result === 'lose'" [class.draw]="item.result === 'draw'">
+            <div class="history-round">Round #{{ roundHistory().length - idx }}</div>
+            <div class="history-moves">
+              <span>{{ gestureIcons[item.playerMove] }}</span>
+              <span class="vs-mini">vs</span>
+              <span>{{ gestureIcons[item.computerMove] }}</span>
+            </div>
+            <div class="history-tag" [class.win]="item.result === 'win'" [class.lose]="item.result === 'lose'" [class.draw]="item.result === 'draw'">
+              {{ item.result | uppercase }}
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- Instructions & How to Play -->
+  <section class="instructions-section">
+    <h3>💡 How to Play with Hand Gestures</h3>
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="rule-icon">✊</div>
+        <h4>Rock</h4>
+        <p>Make a closed fist with all fingers curled into your palm.</p>
+        <span class="rule-beats">Beats Scissors ✌️</span>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">✋</div>
+        <h4>Paper</h4>
+        <p>Open your palm flat with all fingers spread apart.</p>
+        <span class="rule-beats">Beats Rock ✊</span>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">✌️</div>
+        <h4>Scissors</h4>
+        <p>Extend your index and middle fingers in a "V" (peace) sign.</p>
+        <span class="rule-beats">Beats Paper ✋</span>
+      </div>
+    </div>
+  </section>
+</div>

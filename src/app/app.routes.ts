@@ -16,6 +16,7 @@ import { CsvJsonConverterComponent } from './components/pages/tools/csv-json-con
 import { CronExpressionBuilderComponent } from './components/pages/tools/cron-expression-builder/cron-expression-builder.component';
 import { UtilityComponent } from './components/pages/utility/utility.component';
 import { RecipeMakerComponent } from './components/pages/utility/recipe-maker/recipe-maker.component';
+import { RockPaperScissorsComponent } from './components/pages/utility/rock-paper-scissors/rock-paper-scissors.component';
 import { AboutComponent } from './components/pages/about/about.component';
 
 export const routes: Routes = [
@@ -26,6 +27,7 @@ export const routes: Routes = [
   { path: 'terms', component: TermsComponent },
   { path: 'utility', component: UtilityComponent },
   { path: 'recipe-maker', component: RecipeMakerComponent },
+  { path: 'rock-paper-scissors', component: RockPaperScissorsComponent, title: 'AI Rock Paper Scissors' },
   { path: 'error', component: ServerErrorComponent },
   { path: '404', component: NotFoundComponent },
   { path: 'text-diff', component: TextDiffComponent },
