@@ -91,6 +91,14 @@ export class ContentService {
       date: '2025-03-05',
       link: '/csv-json-converter/',
       type: 'tool'
+    },
+    {
+      id: 8,
+      title: 'Cron Expression Builder & Validator',
+      description: 'Design and validate cron schedules with standard 5-field and optional 6-field expressions for automation and job scheduling.',
+      date: '2025-03-06',
+      link: '/cron-expression-builder/',
+      type: 'tool'
     }
   ]);
 
