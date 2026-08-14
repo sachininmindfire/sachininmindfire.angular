@@ -12,6 +12,7 @@ import { SqlPocoComponent } from './components/pages/tools/sql-poco/sql-poco.com
 import { SqlDiagramComponent } from './components/pages/tools/sql-diagram/sql-diagram.component';
 import { FreeApiComponent } from './components/pages/tools/free-api/free-api.component';
 import { MdPdfConvertorComponent } from './components/pages/tools/md-pdf-convertor/md-pdf-convertor.component';
+import { CsvJsonConverterComponent } from './components/pages/tools/csv-json-converter/csv-json-converter.component';
 import { UtilityComponent } from './components/pages/utility/utility.component';
 import { RecipeMakerComponent } from './components/pages/utility/recipe-maker/recipe-maker.component';
 import { AboutComponent } from './components/pages/about/about.component';
@@ -32,6 +33,7 @@ export const routes: Routes = [
   { path: 'sql-diagram', component: SqlDiagramComponent},
   { path: 'free-api', component: FreeApiComponent },
   { path: 'md-pdf-convertor', component: MdPdfConvertorComponent },
+  { path: 'csv-json-converter', component: CsvJsonConverterComponent },
   { path: 'about', component: AboutComponent, title: 'About Me' },
   { path: '**', redirectTo: '404' }
 ];

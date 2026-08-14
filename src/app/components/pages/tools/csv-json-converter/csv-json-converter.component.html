@@ -1,0 +1,62 @@
+<section class="converter-page">
+  <div class="page-header">
+    <p class="eyebrow">Developer Tool</p>
+    <h1>CSV to JSON / JSON to CSV Converter</h1>
+    <p class="lead">Transform CSV tables to JSON objects or serialize JSON data back to CSV rows.</p>
+  </div>
+
+  <div class="mode-toggle" role="tablist" aria-label="Conversion mode">
+    <button
+      type="button"
+      [class.active]="mode === 'csv-to-json'"
+      (click)="setMode('csv-to-json')"
+      aria-pressed="{{ mode === 'csv-to-json' }}"
+    >
+      CSV → JSON
+    </button>
+    <button
+      type="button"
+      [class.active]="mode === 'json-to-csv'"
+      (click)="setMode('json-to-csv')"
+      aria-pressed="{{ mode === 'json-to-csv' }}"
+    >
+      JSON → CSV
+    </button>
+  </div>
+
+  <div class="panel-grid">
+    <div class="panel">
+      <label for="input-data">Input</label>
+      <textarea
+        id="input-data"
+        [(ngModel)]="inputText"
+        [placeholder]="mode === 'csv-to-json' ? 'Paste CSV data here...' : 'Paste JSON data here...'"
+        rows="16"
+      ></textarea>
+    </div>
+
+    <div class="panel">
+      <label for="output-data">Output</label>
+      <textarea
+        id="output-data"
+        [value]="outputText"
+        readonly
+        [placeholder]="mode === 'csv-to-json' ? 'JSON output will appear here...' : 'CSV output will appear here...'"
+        rows="16"
+      ></textarea>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="primary" (click)="convert()">Convert</button>
+    <button type="button" class="secondary" (click)="useSample()">Use sample</button>
+    <button type="button" class="secondary" (click)="clear()">Clear</button>
+    <button type="button" class="secondary" (click)="copyOutput()" [disabled]="!outputText">Copy output</button>
+  </div>
+
+  @if (errorMessage) {
+    <div class="error" role="alert">
+      {{ errorMessage }}
+    </div>
+  }
+</section>
