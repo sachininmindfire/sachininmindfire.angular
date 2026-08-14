@@ -13,6 +13,7 @@ import { SqlDiagramComponent } from './components/pages/tools/sql-diagram/sql-di
 import { FreeApiComponent } from './components/pages/tools/free-api/free-api.component';
 import { MdPdfConvertorComponent } from './components/pages/tools/md-pdf-convertor/md-pdf-convertor.component';
 import { CsvJsonConverterComponent } from './components/pages/tools/csv-json-converter/csv-json-converter.component';
+import { CronExpressionBuilderComponent } from './components/pages/tools/cron-expression-builder/cron-expression-builder.component';
 import { UtilityComponent } from './components/pages/utility/utility.component';
 import { RecipeMakerComponent } from './components/pages/utility/recipe-maker/recipe-maker.component';
 import { AboutComponent } from './components/pages/about/about.component';
@@ -34,6 +35,7 @@ export const routes: Routes = [
   { path: 'free-api', component: FreeApiComponent },
   { path: 'md-pdf-convertor', component: MdPdfConvertorComponent },
   { path: 'csv-json-converter', component: CsvJsonConverterComponent },
+  { path: 'cron-expression-builder', component: CronExpressionBuilderComponent },
   { path: 'about', component: AboutComponent, title: 'About Me' },
   { path: '**', redirectTo: '404' }
 ];
