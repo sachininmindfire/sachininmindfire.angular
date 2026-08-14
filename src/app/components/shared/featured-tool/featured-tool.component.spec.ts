@@ -14,6 +14,14 @@ describe('FeaturedToolComponent', () => {
 
     fixture = TestBed.createComponent(FeaturedToolComponent);
     component = fixture.componentInstance;
+    component.tool = {
+      id: 1,
+      title: 'Featured Tool',
+      description: 'Test Description',
+      link: 'https://example.com',
+      date: '2026-08-14',
+      type: 'tool'
+    };
     fixture.detectChanges();
   });
 
