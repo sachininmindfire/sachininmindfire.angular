@@ -17,6 +17,8 @@ import { CronExpressionBuilderComponent } from './components/pages/tools/cron-ex
 import { UtilityComponent } from './components/pages/utility/utility.component';
 import { RecipeMakerComponent } from './components/pages/utility/recipe-maker/recipe-maker.component';
 import { RockPaperScissorsComponent } from './components/pages/utility/rock-paper-scissors/rock-paper-scissors.component';
+import { AzureQuizCheckComponent } from './components/pages/utility/azure-quiz-check/azure-quiz-check.component';
+import { QuizRunnerComponent } from './components/pages/utility/azure-quiz-check/quiz-runner/quiz-runner.component';
 import { AboutComponent } from './components/pages/about/about.component';
 
 export const routes: Routes = [
@@ -28,6 +30,9 @@ export const routes: Routes = [
   { path: 'utility', component: UtilityComponent },
   { path: 'recipe-maker', component: RecipeMakerComponent },
   { path: 'rock-paper-scissors', component: RockPaperScissorsComponent, title: 'AI Rock Paper Scissors' },
+  { path: 'azure-quiz-check', component: AzureQuizCheckComponent, title: 'Azure Quiz Check' },
+  { path: 'azure-quiz-check/take/:quizId', component: QuizRunnerComponent, title: 'Take Azure Quiz' },
+  { path: 'azure-quiz-check/review/:quizId', component: QuizRunnerComponent, title: 'Review Azure Quiz' },
   { path: 'error', component: ServerErrorComponent },
   { path: '404', component: NotFoundComponent },
   { path: 'text-diff', component: TextDiffComponent },
@@ -41,3 +46,4 @@ export const routes: Routes = [
   { path: 'about', component: AboutComponent, title: 'About Me' },
   { path: '**', redirectTo: '404' }
 ];
+
