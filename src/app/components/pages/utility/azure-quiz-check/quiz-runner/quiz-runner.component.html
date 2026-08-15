@@ -1,0 +1,322 @@
+<div class="quiz-runner-container">
+  <!-- Top Navigation & Header Bar -->
+  <header class="runner-header">
+    <div class="header-left">
+      <a [routerLink]="['/azure-quiz-check']" class="back-link" title="Return to Dashboard">
+        &larr; Exit to Dashboard
+      </a>
+      <div class="session-info">
+        <h1 class="session-title">
+          <span class="azure-logo">☁️</span>
+          Azure Knowledge Check
+        </h1>
+        <span class="session-id">{{ quizId() }}</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      @if (!isReviewMode() && !isSubmitted()) {
+        <div class="timer-card" [class.paused]="isTimerPaused()">
+          <span class="timer-icon">⏱️</span>
+          <span class="timer-digits">{{ formattedTime() }}</span>
+          <button class="timer-pause-btn" (click)="toggleTimerPause()" [title]="isTimerPaused() ? 'Resume Timer' : 'Pause Timer'">
+            {{ isTimerPaused() ? '▶️' : '⏸️' }}
+          </button>
+        </div>
+      }
+
+      <button class="popout-btn" (click)="openPopoutWindow()" title="Open in Dedicated Window">
+        ↗️ Popout
+      </button>
+
+      @if (!isReviewMode() && !isSubmitted()) {
+        <button class="btn-submit-primary" (click)="openSubmitConfirmation()">
+          Submit Quiz
+        </button>
+      } @else {
+        <button class="btn-retry" (click)="retryQuiz()" title="Re-attempt this Quiz">
+          🔄 Retry Quiz
+        </button>
+        <a [routerLink]="['/azure-quiz-check']" class="btn-primary">
+          Back to Dashboard
+        </a>
+      }
+    </div>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar-container">
+    <div class="progress-fill" [style.width.%]="progressPercent()"></div>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Synchronizing Azure Knowledge Round...</p>
+    </div>
+  }
+
+  <!-- Error Alert -->
+  @if (errorMessage()) {
+    <div class="error-alert">
+      <span>⚠️ {{ errorMessage() }}</span>
+    </div>
+  }
+
+  <!-- Main Content Body -->
+  @if (!isLoading() && quiz()) {
+    <main class="runner-body">
+      
+      <!-- SUBMISSION SUMMARY SCREEN (AFTER COMPLETION OR IN REVIEW MODE) -->
+      @if (isSubmitted() || isReviewMode()) {
+        <section class="results-summary-card">
+          <div class="summary-top">
+            <div class="score-circle-container">
+              <div class="score-circle">
+                <span class="score-value">{{ quizResult()?.score ?? quiz()?.score ?? 0 }}</span>
+                <span class="score-total">/ {{ totalQuestions() }}</span>
+              </div>
+              <div class="score-percent">
+                {{ quizResult()?.percentage ?? (totalQuestions() > 0 ? (quiz()!.score / totalQuestions() * 100 | number:'1.0-0') : 0) }}%
+              </div>
+            </div>
+
+            <div class="summary-verdict">
+              <div class="verdict-header-row">
+                @let badge = getPerformanceBadge(quizResult()?.percentage ?? (totalQuestions() > 0 ? (quiz()!.score / totalQuestions() * 100) : 0));
+                <div class="verdict-badge" [ngClass]="badge.class">
+                  <span class="verdict-icon">{{ badge.icon }}</span>
+                  <span>{{ badge.label }}</span>
+                </div>
+                <button class="btn-retry-card" (click)="retryQuiz()">
+                  🔄 Retry Assessment
+                </button>
+              </div>
+              <h2>Assessment Completed</h2>
+              <p class="verdict-desc">
+                Review the detailed question analysis and architecture rationales below to reinforce enterprise competencies.
+              </p>
+            </div>
+          </div>
+
+          <!-- Domain Competency Breakdown -->
+          <div class="domain-breakdown-section">
+            <h3>Domain Competency Breakdown</h3>
+            <div class="domain-bars-grid">
+              @for (domain of getDomainScores(); track domain.domain) {
+                <div class="domain-bar-card">
+                  <div class="domain-bar-label">
+                    <span class="domain-name">{{ domain.domain }}</span>
+                    <span class="domain-stat">{{ domain.correct }} / {{ domain.total }} ({{ domain.percent }}%)</span>
+                  </div>
+                  <div class="domain-bar-track">
+                    <div class="domain-bar-fill" [style.width.%]="domain.percent"></div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </section>
+      }
+
+      <div class="quiz-interaction-layout">
+        <!-- Question Content Card (Left / Center) -->
+        <section class="question-pane">
+          @if (currentQuestion(); as q) {
+            <div class="question-card">
+              <div class="question-meta">
+                <div class="q-number-pill">
+                  Question {{ currentIndex() + 1 }} of {{ totalQuestions() }}
+                </div>
+                <div class="q-domain-tag">
+                  🏷️ {{ q.domain }}
+                </div>
+                <div class="q-diff-tag">
+                  {{ q.difficulty || 'Enterprise Architect' }}
+                </div>
+                @if (!isReviewMode()) {
+                  <button 
+                    class="btn-mark-review" 
+                    [class.marked]="isQuestionMarked(currentIndex())"
+                    (click)="toggleMarkForReview()"
+                    title="Toggle mark for review (Shortcut: M)">
+                    {{ isQuestionMarked(currentIndex()) ? '🚩 Marked for Review' : '🏳️ Mark for Review' }}
+                  </button>
+                }
+              </div>
+
+              <!-- Question Text -->
+              <h2 class="question-text">
+                {{ q.question }}
+              </h2>
+
+              <!-- Options Grid -->
+              <div class="options-container">
+                @for (opt of q.options; track $index) {
+                  @let isCorrect = isOptionCorrect($index);
+                  @let isUserChoice = isOptionUserChoice($index);
+                  @let isUserWrong = isOptionUserWrong($index);
+
+                  <div 
+                    class="option-item"
+                    [class.selected]="isUserChoice && !isReviewMode()"
+                    [class.review-correct]="isReviewMode() && isCorrect"
+                    [class.review-wrong]="isUserWrong"
+                    (click)="selectOption($index)">
+                    
+                    <div class="option-prefix">
+                      <span class="option-letter">{{ ['A', 'B', 'C', 'D'][$index] }}</span>
+                      @if (isReviewMode()) {
+                        @if (isCorrect) {
+                          <span class="review-icon correct">✓</span>
+                        } @else if (isUserWrong) {
+                          <span class="review-icon wrong">✗</span>
+                        }
+                      }
+                    </div>
+
+                    <div class="option-text">
+                      <span class="option-label-text">{{ opt }}</span>
+                      @if (isReviewMode()) {
+                        @if (isCorrect && isUserChoice) {
+                          <span class="badge-choice badge-choice-correct">✓ Correct Answer (Your Choice)</span>
+                        } @else if (isCorrect) {
+                          <span class="badge-choice badge-choice-correct">✓ Correct Answer</span>
+                        } @else if (isUserWrong) {
+                          <span class="badge-choice badge-choice-wrong">✗ Your Choice</span>
+                        }
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+
+              <!-- Architectural Explanation (Review Mode) -->
+              @if (isReviewMode()) {
+                <div class="explanation-box">
+                  <div class="exp-header">
+                    <span class="exp-icon">💡</span>
+                    <strong>Architectural Rationale & Reference:</strong>
+                  </div>
+                  <p class="exp-content">
+                    {{ q.explanation || 'Refer to Azure Well-Architected Framework architecture guidelines for this scenario.' }}
+                  </p>
+                </div>
+              }
+
+              <!-- Bottom Navigation Controls -->
+              <div class="question-actions">
+                <button 
+                  class="btn-secondary" 
+                  [disabled]="currentIndex() === 0"
+                  (click)="prevQuestion()">
+                  &larr; Previous Question
+                </button>
+
+                <div class="shortcuts-hint">
+                  <span>Keys: <strong>1-4</strong> or <strong>A-D</strong> select &bull; <strong>&larr;/&rarr;</strong> navigate</span>
+                </div>
+
+                <button 
+                  class="btn-secondary" 
+                  [disabled]="currentIndex() === totalQuestions() - 1"
+                  (click)="nextQuestion()">
+                  Next Question &rarr;
+                </button>
+              </div>
+            </div>
+          }
+        </section>
+
+        <!-- Question Palette Sidebar (Right) -->
+        <aside class="palette-pane">
+          <div class="palette-card">
+            <h3 class="palette-title">Question Palette</h3>
+            
+            @if (isReviewMode() || isSubmitted()) {
+              <div class="palette-legend review-legend">
+                <div class="legend-item"><span class="legend-dot correct"></span> Correct</div>
+                <div class="legend-item"><span class="legend-dot incorrect"></span> Incorrect</div>
+                <div class="legend-item"><span class="legend-dot unvisited"></span> Unvisited</div>
+                <div class="legend-item"><span class="legend-dot current"></span> Current</div>
+              </div>
+            } @else {
+              <div class="palette-legend">
+                <div class="legend-item"><span class="legend-dot answered"></span> Answered</div>
+                <div class="legend-item"><span class="legend-dot current"></span> Current</div>
+                <div class="legend-item"><span class="legend-dot marked"></span> Review</div>
+                <div class="legend-item"><span class="legend-dot unvisited"></span> Unvisited</div>
+              </div>
+            }
+
+            <div class="palette-grid">
+              @for (q of (quizResult()?.results || quiz()!.questions); track $index) {
+                @let isCurrent = $index === currentIndex();
+                @let isAns = isQuestionAnswered($index);
+                @let isMarked = isQuestionMarked($index);
+                @let status = getQuestionReviewStatus($index);
+
+                <button 
+                  class="palette-node"
+                  [class.current]="isCurrent"
+                  [class.answered]="isAns && !isReviewMode()"
+                  [class.marked]="isMarked && !isReviewMode()"
+                  [class.node-correct]="isReviewMode() && status === 'correct'"
+                  [class.node-incorrect]="isReviewMode() && status === 'incorrect'"
+                  [class.node-unvisited]="isReviewMode() && status === 'unvisited'"
+                  (click)="goToQuestion($index)"
+                  [title]="'Jump to Question ' + ($index + 1)">
+                  {{ $index + 1 }}
+                </button>
+              }
+            </div>
+
+            <div class="palette-stats">
+              <div class="stat-pill">
+                <span class="stat-num">{{ answeredCount() }}</span>
+                <span class="stat-lbl">Answered</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-num">{{ totalQuestions() - answeredCount() }}</span>
+                <span class="stat-lbl">Pending</span>
+              </div>
+            </div>
+
+            @if (!isReviewMode() && !isSubmitted()) {
+              <button class="btn-submit-block" (click)="openSubmitConfirmation()">
+                Submit Final Answers
+              </button>
+            }
+          </div>
+        </aside>
+      </div>
+
+    </main>
+  }
+</div>
+
+<!-- SUBMIT CONFIRMATION MODAL -->
+@if (showSubmitModal()) {
+  <div class="modal-backdrop" (click)="cancelSubmit()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <span class="modal-icon">📝</span>
+        <h3>Ready to Submit Assessment?</h3>
+      </div>
+      <div class="modal-body">
+        <p>You have answered <strong>{{ answeredCount() }}</strong> of <strong>{{ totalQuestions() }}</strong> questions.</p>
+        @if (totalQuestions() - answeredCount() > 0) {
+          <div class="unanswered-warning">
+            ⚠️ You have <strong>{{ totalQuestions() - answeredCount() }}</strong> unanswered questions remaining.
+          </div>
+        }
+        <p class="modal-subtext">Once submitted, your answers will be evaluated and your score will be permanently recorded in your history.</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="cancelSubmit()">Continue Answering</button>
+        <button class="btn-submit-confirm" (click)="confirmSubmit()">Confirm & Submit</button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,8 +1,9 @@
-# Feature Specification: Azure Quiz Check Utility
+# Feature Specification: Azure Quiz Check Utility (AI-Powered with Google Gemini)
 
 **Feature Name**: Azure Quiz Check (`azure-quiz-check`)  
 **Created**: 2026-08-15  
-**Status**: Open / Approved (Option 1: Google Sheets + Google Apps Script)  
+**Updated**: 2026-08-15 (Integrated Google Gemini AI Generation & Dual-Sync)  
+**Status**: In Implementation (Option 1: Google Sheets + Google Apps Script + Google Gemini API)  
 **Reference Document**: [Azure ArchitectOrion.docx](file:///c:/Users/Sachin%20Kumar/source/repos/sachininmindfire/sachininmindfire.angular/Azure%20ArchitectOrion.docx)  
 **Target Profile**: Enterprise Azure Solution Architect (15+ Years Experience)
 
@@ -10,128 +11,91 @@
 
 ## 1. Overview & Business Value
 
-The **Azure Quiz Check** utility is a continuous learning and daily knowledge assessment tool designed for senior and enterprise Azure Solution Architects. Based on the Orion Innovation Job Description ([Azure ArchitectOrion.docx](file:///c:/Users/Sachin%20Kumar/source/repos/sachininmindfire/sachininmindfire.angular/Azure%20ArchitectOrion.docx)), it systematically tests domain knowledge across high availability architecture, governance, security, DevOps, modern integrations, and CTO advisory / presales.
+The **Azure Quiz Check** utility is an AI-powered continuous learning and daily knowledge assessment tool designed for senior and enterprise Azure Solution Architects. Based on the Orion Innovation Job Description ([Azure ArchitectOrion.docx](file:///c:/Users/Sachin%20Kumar/source/repos/sachininmindfire/sachininmindfire.angular/Azure%20ArchitectOrion.docx)), it leverages **Google Gemini models** to dynamically generate 20 scenario-based multiple choice questions along with correct answers, architectural rationales, and domain classifications.
 
-The solution integrates with **Google Sheets** and **Google Apps Script** as a zero-cost, serverless backend that automates daily 9:00 AM quiz creation, dispatches email notifications directly via Gmail, and provides RESTful endpoints to the Angular application.
+The solution provides:
+1. **Direct UI AI Generation**: Generates fresh, non-repeating 20-question rounds on-demand via the Google Gemini API.
+2. **Simultaneous Google Sheets & Docs Synchronization**: As soon as a quiz is generated or completed, it is simultaneously persisted to Google Sheets (and/or Google Docs) via Google Apps Script Web App.
+3. **Daily 9:00 AM Automated Schedule**: Google Apps Script daily trigger invokes Gemini to generate daily knowledge checks, records them, and dispatches a Gmail alert with deep link.
 
 ---
 
-## 2. User Stories & Acceptance Criteria
+## 2. LLM Instructions & Prompt Specification
 
-### User Story 1: Daily 9:00 AM Automated Quiz & Gmail Notification (Priority: P1)
+The Google Gemini model is prompted with rigorous instructions aligned with the Orion Azure Architect JD:
+
+```text
+You are an Elite Azure Enterprise Solution Architect and Technical Assessment Lead evaluating senior cloud candidates (15+ years experience) against the Orion Innovation Azure Architect Job Description.
+
+Generate exactly 20 challenging, scenario-based multiple choice questions mapped to the following 6 core competency domains:
+1. Enterprise Solution Architecture & Scalability (Active-Active, Multi-Region, Well-Architected Framework, AKS, BCDR) - 5 Questions
+2. Cloud Governance, FinOps & CAF (Landing Zones, Azure Policy, Management Groups, Cost Management, Reserved Instances, Hybrid Benefit) - 4 Questions
+3. Security, Identity & Zero-Trust (Microsoft Entra ID, PIM, RBAC, Key Vault, Defender for Cloud, Network Security, Private Endpoints) - 4 Questions
+4. DevOps, CI/CD & Service Accelerators (Bicep/Terraform modular accelerators, GitHub Actions/Azure Pipelines, OIDC Workload Identity, GTM enablers) - 3 Questions
+5. Data, Modern Integration & Hybrid (Event Grid, Service Bus, APIM, Cosmos DB, Event Hubs, Azure Arc) - 2 Questions
+6. Consulting, Presales & CTO Advisory (RFP estimation, Strangler Fig migration strategy, CIO/CTO trusted advisor, coaching & mentoring) - 2 Questions
+
+Format Requirements:
+Return ONLY valid JSON matching this schema:
+[
+  {
+    "id": "AZ-AI-01",
+    "domain": "Enterprise Solution Architecture & Scalability",
+    "question": "Scenario description...",
+    "options": ["A. Option 1", "B. Option 2", "C. Option 3", "D. Option 4"],
+    "correctIndex": 0,
+    "explanation": "Detailed architectural rationale citing Azure Well-Architected Framework and design best practices.",
+    "difficulty": "Enterprise Architect (L400)"
+  }
+]
+```
+
+---
+
+## 3. User Stories & Acceptance Criteria
+
+### User Story 1: Dynamic AI Quiz Generation via Google Gemini (Priority: P1)
 **As an** Azure Architect,  
-**I want** a 20-question quiz generated automatically every morning at 9:00 AM and an alert sent to my Gmail with a direct link,  
-**So that** I maintain a consistent daily habit of refreshing my cloud knowledge.
+**I want** multiple-choice scenario questions dynamically generated by Google Gemini AI,  
+**So that** I get fresh, realistic, enterprise-grade scenarios every time I take a quiz.
 
 #### Acceptance Criteria:
-- **AC 1.1**: Google Apps Script time-driven trigger runs every day at 9:00 AM local time.
-- **AC 1.2**: Creates a new pending quiz record with 20 randomly selected questions across the 6 competency domains.
-- **AC 1.3**: Sends an email via `GmailApp` to the user's Gmail with quiz metadata and a deep link (`https://<app-domain>/utility/azure-quiz-check?quizId=<id>&mode=take`).
-- **AC 1.4**: If the link is clicked from Gmail, the application opens directly in dedicated quiz mode.
+- **AC 1.1**: The application connects to Google Gemini API (`gemini-2.5-flash` or `gemini-1.5-flash`) using user-provided API key or backend proxy.
+- **AC 1.2**: AI returns 20 valid questions conforming strictly to the 6 Orion Azure Architect competency domains.
+- **AC 1.3**: Each question contains 4 distinct options, correct answer index, difficulty level, and comprehensive architectural explanation.
 
 ---
 
-### User Story 2: On-Demand Quiz Generation ("Start a Fresh Quiz") (Priority: P1)
+### User Story 2: Simultaneous Google Sheets Sync (Priority: P1)
 **As a** user,  
-**I want** to take an ad-hoc quiz at any time from the utility dashboard,  
-**So that** I have full flexibility to test my knowledge whenever I have free time.
+**I want** newly generated AI quizzes and submission results to sync to Google Sheets in real-time,  
+**So that** all my question banks, attempts, and historical marks are centralized in Google Drive.
 
 #### Acceptance Criteria:
-- **AC 2.1**: A prominent `"Start a Fresh Quiz"` button is available on the main utility dashboard.
-- **AC 2.2**: Clicking the button generates a new 20-question set on-demand via the Google Apps Script Web App API.
-- **AC 2.3**: Opens the quiz session in a dedicated window or distraction-free mode.
+- **AC 2.1**: When a quiz is generated on the UI, it posts the session to Google Apps Script (`action: 'syncAiGeneratedQuiz'`), storing the questions in `QuestionBank` and `QuizSessions`.
+- **AC 2.2**: When submitted, final score and answers are synchronized back to Google Sheets.
+- **AC 2.3**: If the Google Apps Script endpoint is unreachable, the system gracefully falls back to local storage without disrupting the quiz experience.
 
 ---
 
-### User Story 3: Quiz Management & History Dashboard (Priority: P1)
+### User Story 3: Daily 9:00 AM Automated AI Trigger & Gmail Notification (Priority: P1)
 **As a** user,  
-**I want** to view pending quizzes, historical attempts, scores, and review links on a unified dashboard,  
-**So that** I can track my knowledge retention and learning progression over time.
+**I want** the daily 9:00 AM trigger in Google Apps Script to call Gemini AI and dispatch a Gmail alert,  
+**So that** my daily morning knowledge check is generated automatically and waiting in my inbox.
 
 #### Acceptance Criteria:
-- **AC 3.1**: **Pending Quizzes Section**: Lists any uncompleted scheduled daily quizzes with a clear notification badge and `"Take Now"` button.
-- **AC 3.2**: **Quiz History Table**: Displays all past attempts with columns for Date, Quiz Type (Daily / On-Demand), Score / Marks Secured (e.g. `18/20 (90%)`), Status, and Review Action.
-- **AC 3.3**: **Performance Analytics**: Shows overall accuracy rate, completion streak, and competency breakdown (e.g., Governance vs. Security vs. Architecture).
-- **AC 3.4**: **Review Mode**: Clicking an older completed quiz displays a read-only review of questions, user selections, correct answers, and architectural explanations.
+- **AC 3.1**: Google Apps Script time trigger invokes Gemini API every morning at 9:00 AM.
+- **AC 3.2**: Saves the 20 AI questions to Google Sheets and creates a new pending session.
+- **AC 3.3**: Dispatches an HTML email via `GmailApp` with deep link to the application.
 
 ---
 
-### User Story 4: Dedicated Quiz Taking Mode (Priority: P1)
-**As a** candidate/architect taking the quiz,  
-**I want** an isolated, distraction-free interface with question navigation, timer, and instant scoring,  
-**So that** I can focus entirely on the scenario-based architectural questions.
+### User Story 4: Dedicated Quiz Taking & Review UI (Priority: P1)
+**As a** candidate taking the assessment,  
+**I want** an isolated quiz mode with question navigation (1–20), timer, instant scoring, and architectural explanations,  
+**So that** I can assess my readiness and learn from the detailed rationales.
 
 #### Acceptance Criteria:
-- **AC 4.1**: Launches in a separate window or fullscreen modal view.
-- **AC 4.2**: Displays 20 multiple-choice questions with 4 options each and question palette navigation (1–20).
-- **AC 4.3**: Allows marking questions for review and navigating back and forth before final submission.
-- **AC 4.4**: On submission, posts answers to Google Apps Script backend, computes marks, and presents instant score breakdown with explanations for each question.
-
----
-
-## 3. Architecture & Google Backend Design (Option 1)
-
-### 3.1. Google Sheets Schema
-A dedicated Google Spreadsheet acts as the database with two primary sheets:
-
-#### Sheet 1: `QuestionBank`
-| Column | Type | Description |
-| :--- | :--- | :--- |
-| `QuestionId` | String | Unique question identifier (e.g., `AZ-Q001`) |
-| `Domain` | String | Architecture, Governance, Security, DevOps, Data/Integration, Presales |
-| `QuestionText` | Text | Scenario or architectural problem description |
-| `OptionsJSON` | JSON String | Array of 4 options `["A. ...", "B. ...", "C. ...", "D. ..."]` |
-| `CorrectOption` | String | Index or key of the correct option (`0`, `1`, `2`, `3`) |
-| `Explanation` | Text | Detailed architectural rationale citing Well-Architected Framework |
-| `Difficulty` | String | `L300` / `L400` / `Enterprise Architect` |
-
-#### Sheet 2: `QuizSessions`
-| Column | Type | Description |
-| :--- | :--- | :--- |
-| `QuizId` | String | Unique session ID (e.g., `QZ-20260815-0900`) |
-| `CreatedAt` | Timestamp | Generation timestamp (ISO 8601) |
-| `Type` | String | `SCHEDULED_DAILY` or `ON_DEMAND` |
-| `Status` | String | `PENDING`, `IN_PROGRESS`, `COMPLETED` |
-| `QuestionIdsJSON` | JSON String | Array of 20 selected Question IDs |
-| `UserAnswersJSON` | JSON String | Array of chosen answers |
-| `Score` | Number | Total marks secured (out of 20) |
-| `CompletedAt` | Timestamp | Submission timestamp |
-
----
-
-### 3.2. Google Apps Script Web App Implementation
-- **Triggers**:
-  - `createDailyScheduledQuiz()`: Time-driven trigger set to daily at 9:00 AM. Selects 20 questions, creates row in `QuizSessions`, and calls `GmailApp.sendEmail()`.
-- **REST Endpoints (`doGet` / `doPost`)**:
-  - `GET ?action=getDashboardData`: Returns list of pending quizzes, past history, and statistics.
-  - `GET ?action=getQuiz&quizId=<id>`: Returns the 20 questions for the specified quiz session.
-  - `POST ?action=createOnDemandQuiz`: Generates a new on-demand session and returns its ID.
-  - `POST ?action=submitQuiz`: Accepts `QuizId` and user answers, calculates score, updates row in `QuizSessions`, and returns results with explanations.
-
----
-
-## 4. Frontend Application Integration (Angular)
-
-### 4.1. Navigation & Routing
-1. **Utility Hub**: Add card in `src/app/components/pages/utility/utility.component.html`:
-   - Title: **Azure Quiz Check**
-   - Icon: ☁️ / 🧠
-   - Description: Daily knowledge checks & architect-level scenario assessments for Azure Solution Architects.
-2. **Routes**:
-   - `/utility/azure-quiz-check` (Dashboard: Pending, History, Start Quiz button)
-   - `/utility/azure-quiz-check/take/:quizId` (Isolated Quiz Runner)
-   - `/utility/azure-quiz-check/review/:quizId` (Historical Review Mode)
-
-### 4.2. Angular Service (`AzureQuizService`)
-- Integrates with Google Apps Script Web App via Angular `HttpClient`.
-- Handles caching, loading indicators, and error resilience.
-
----
-
-## 5. Definition of Done (DoD)
-
-1. **Google Backend**: Google Spreadsheet created with question bank mapped to Orion Azure Architect competencies, and Apps Script deployed as Web App with daily 9 AM trigger.
-2. **Angular Utility**: Dashboard and Quiz Runner components developed matching design guidelines.
-3. **Email Flow**: 9 AM trigger verified to send Gmail notification with working deep link.
-4. **On-Demand Flow**: "Start a fresh quiz" instantly creates and launches a 20-question quiz.
-5. **Persistence**: Scores and user attempts are saved to Google Sheets and reflected in historical records.
+- **AC 4.1**: Provides 1–20 question palette, timer, mark for review, and keyboard shortcuts.
+- **AC 4.2**: Computes score and percentage, displaying performance verdict badge and domain competency bars.
+- **AC 4.3**: Displays full architectural explanations for review.

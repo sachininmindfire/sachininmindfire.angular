@@ -1,0 +1,309 @@
+<div class="azure-quiz-dashboard">
+  <!-- Hero Section -->
+  <header class="dashboard-hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="azure-icon">☁️</span>
+        <span>Enterprise Azure Architecture &bull; Orion Innovation JD Refresher</span>
+      </div>
+      <h1 class="hero-title">Azure Quiz Check</h1>
+      <p class="hero-subtitle">
+        Daily 9:00 AM scenario assessments & continuous knowledge checks powered by <strong>Google Gemini AI</strong> for Enterprise Azure Solution Architects (15+ Years Experience).
+      </p>
+
+      <div class="hero-actions">
+        <button class="btn-hero-primary" (click)="startFreshQuiz()" [disabled]="isLoading()">
+          <span class="btn-icon">✨</span>
+          {{ isLoading() ? 'Generating AI Quiz...' : 'Start a Fresh AI Quiz (20 Qs)' }}
+        </button>
+
+        <button class="btn-hero-secondary" (click)="triggerDemoDailyQuiz()" title="Simulate 9 AM Daily Quiz generation">
+          <span class="btn-icon">⏰</span>
+          Simulate 9 AM Daily Quiz
+        </button>
+
+        <button class="btn-hero-outline" (click)="openSettings()">
+          <span class="btn-icon">⚙️</span>
+          AI & Cloud Sync Settings
+        </button>
+      </div>
+    </div>
+
+    <!-- Sync & AI status badges -->
+    <div class="sync-indicators-group">
+      <div class="sync-indicator-card" [class.online]="hasGeminiKey()">
+        <div class="status-dot"></div>
+        <div class="status-text">
+          <strong>{{ hasGeminiKey() ? '✨ Gemini AI Active' : '⚡ Seed Question Bank' }}</strong>
+          <p>{{ hasGeminiKey() ? 'Dynamic scenario generation via Gemini 2.5' : 'Add Gemini API Key in Settings for live AI generation' }}</p>
+        </div>
+      </div>
+
+      <div class="sync-indicator-card" [class.online]="isOnline()">
+        <div class="status-dot"></div>
+        <div class="status-text">
+          <strong>{{ isOnline() ? 'Google Sheets Live Sync' : 'Local Storage Mode' }}</strong>
+          <p>{{ isOnline() ? 'Connected to Google Apps Script Web App' : 'Using browser storage. Click settings to connect.' }}</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Loading Message Notification -->
+  @if (isLoading()) {
+    <div class="ai-loading-banner">
+      <div class="spinner-small"></div>
+      <span>{{ loadingStatusMessage() }}</span>
+    </div>
+  }
+
+  <!-- PENDING QUIZZES ALERT SECTION -->
+  @if (pendingQuizzes().length > 0) {
+    <section class="pending-quizzes-section">
+      <div class="pending-header">
+        <div class="pending-title-group">
+          <span class="alert-icon">🔔</span>
+          <h2>Pending Daily Knowledge Checks</h2>
+          <span class="pending-badge">{{ pendingQuizzes().length }} Pending</span>
+        </div>
+        <p class="pending-desc">Scheduled 9:00 AM rounds waiting for your completion:</p>
+      </div>
+
+      <div class="pending-cards-grid">
+        @for (quiz of pendingQuizzes(); track quiz.quizId) {
+          <div class="pending-card">
+            <div class="pending-card-header">
+              <span class="card-type-tag">
+                {{ quiz.type === 'SCHEDULED_DAILY' ? '📅 9:00 AM Daily Quiz' : '⚡ On-Demand' }}
+              </span>
+              <span class="card-date">{{ quiz.createdAt | date:'medium' }}</span>
+            </div>
+
+            <div class="pending-card-body">
+              <h3 class="card-title">{{ quiz.quizId }}</h3>
+              <p class="card-info">20 Scenario Questions &bull; High Availability, Security, FinOps, CAF & Integration</p>
+            </div>
+
+            <div class="pending-card-actions">
+              <a [routerLink]="['/azure-quiz-check/take', quiz.quizId]" class="btn-take-quiz">
+                Take Quiz Now &rarr;
+              </a>
+              <button class="btn-popout" (click)="takeQuizInNewWindow(quiz.quizId)" title="Open in Dedicated Window">
+                ↗️ New Window
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- MAIN STATS CARDS -->
+  <section class="stats-overview-grid">
+    <div class="stat-card">
+      <div class="stat-icon-wrap blue">🎯</div>
+      <div class="stat-details">
+        <span class="stat-label">Average Accuracy</span>
+        <span class="stat-value">{{ stats().averageAccuracy }}%</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon-wrap green">✅</div>
+      <div class="stat-details">
+        <span class="stat-label">Quizzes Completed</span>
+        <span class="stat-value">{{ stats().totalCompleted }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon-wrap orange">🔥</div>
+      <div class="stat-details">
+        <span class="stat-label">Daily Streak</span>
+        <span class="stat-value">{{ stats().currentStreakDays }} Days</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon-wrap purple">📋</div>
+      <div class="stat-details">
+        <span class="stat-label">Pending Rounds</span>
+        <span class="stat-value">{{ stats().pendingCount }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TWO COLUMN LAYOUT: DOMAIN MASTERY & QUIZ HISTORY -->
+  <div class="dashboard-grid-layout">
+    <!-- Domain Mastery Breakdown -->
+    <section class="domain-mastery-panel">
+      <div class="panel-header">
+        <h3>🧠 Domain Competency Matrix</h3>
+        <span class="panel-subtitle">Mapped to Orion Azure Solution Architect JD</span>
+      </div>
+
+      <div class="domain-list">
+        @for (item of domainMasteryList(); track item.domain) {
+          <div class="domain-item">
+            <div class="domain-info">
+              <span class="domain-title">{{ item.domain }}</span>
+              <span class="domain-pct">{{ item.percent }}%</span>
+            </div>
+            <div class="domain-progress-track">
+              <div class="domain-progress-fill" [style.width.%]="item.percent"></div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Quiz History & Past Rounds -->
+    <section class="history-panel">
+      <div class="history-panel-header">
+        <div class="panel-title-group">
+          <h3>📊 Assessment History</h3>
+          <span class="panel-subtitle">Track scores, performance, and review previous rounds</span>
+        </div>
+
+        <div class="tab-filters">
+          <button class="tab-btn" [class.active]="activeTab() === 'all'" (click)="activeTab.set('all')">All</button>
+          <button class="tab-btn" [class.active]="activeTab() === 'daily'" (click)="activeTab.set('daily')">Daily 9 AM</button>
+          <button class="tab-btn" [class.active]="activeTab() === 'ondemand'" (click)="activeTab.set('ondemand')">On-Demand</button>
+        </div>
+      </div>
+
+      @if (history().length === 0) {
+        <div class="empty-history">
+          <span class="empty-icon">📭</span>
+          <h4>No Completed Quizzes Yet</h4>
+          <p>Start a fresh quiz round or take a pending scheduled quiz to populate your history.</p>
+          <button class="btn-primary" (click)="startFreshQuiz()">Start First Quiz</button>
+        </div>
+      } @else {
+        <div class="table-responsive">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Date & Time</th>
+                <th>Type</th>
+                <th>Score / Marks</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of history(); track item.quizId) {
+                <tr>
+                  <td>
+                    <div class="date-cell">
+                      <strong>{{ (item.completedAt || item.createdAt) | date:'MMM dd, yyyy' }}</strong>
+                      <small>{{ (item.completedAt || item.createdAt) | date:'shortTime' }}</small>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="type-badge" [class.daily]="item.type === 'SCHEDULED_DAILY'">
+                      {{ item.type === 'SCHEDULED_DAILY' ? '📅 Daily 9 AM' : '⚡ On-Demand' }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="score-cell">
+                      <strong>{{ item.score }} / {{ item.totalQuestions }}</strong>
+                      <span class="score-pill" [ngClass]="getScoreBadgeClass(item.score, item.totalQuestions)">
+                        {{ (item.score / item.totalQuestions * 100) | number:'1.0-0' }}%
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="status-tag completed">
+                      ✓ Completed
+                    </span>
+                  </td>
+                  <td>
+                    <div class="action-cell">
+                      <a [routerLink]="['/azure-quiz-check/review', item.quizId]" class="btn-action-review" title="Review questions and answers">
+                        Review Answers
+                      </a>
+                      <button class="btn-action-popout" (click)="reviewQuizInNewWindow(item.quizId)" title="Open review in new window">
+                        ↗️
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL (GOOGLE SHEETS & GEMINI AI) -->
+@if (showSettingsModal()) {
+  <div class="modal-backdrop" (click)="closeSettings()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <span class="modal-icon">⚙️</span>
+        <h3>AI & Cloud Sync Configuration</h3>
+      </div>
+      <div class="modal-body">
+        <!-- Gemini API Key -->
+        <div class="form-group">
+          <label for="geminiKey">
+            <span>✨ Google Gemini API Key:</span>
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" class="link-external">
+              Get Free Key &rarr;
+            </a>
+          </label>
+          <input
+            id="geminiKey"
+            type="password"
+            class="form-control"
+            [(ngModel)]="tempGeminiApiKey"
+            placeholder="AIzaSy..." />
+          <small class="form-hint">
+            Enables dynamic, non-repeating 20-question Orion JD scenario generation via Gemini 2.5 Flash.
+          </small>
+        </div>
+
+        <!-- Google Apps Script Web App URL -->
+        <div class="form-group">
+          <label for="webAppUrl">Google Apps Script Web App URL:</label>
+          <div class="input-with-action">
+            <input
+              id="webAppUrl"
+              type="url"
+              class="form-control"
+              [(ngModel)]="tempWebAppUrl"
+              placeholder="https://script.google.com/macros/s/.../exec" />
+            <button 
+              type="button" 
+              class="btn-test-conn" 
+              (click)="testConnection()" 
+              [disabled]="isTestingConnection() || !tempWebAppUrl().trim()">
+              {{ isTestingConnection() ? 'Testing...' : 'Test Connection' }}
+            </button>
+          </div>
+          <small class="form-hint">
+            Simultaneously persists AI-generated questions to Google Sheets & enables 9:00 AM automated Gmail alerts.
+          </small>
+        </div>
+
+        @if (connectionTestResult(); as res) {
+          <div class="test-result-box" [class.success]="res.success" [class.error]="!res.success">
+            <span>{{ res.message }}</span>
+          </div>
+        }
+
+        <div class="guide-box">
+          <strong>📖 Need Deployment Code & Instructions?</strong>
+          <p>Complete Apps Script code and guide located at <code>scripts/google-apps-script/README.md</code>.</p>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeSettings()">Cancel</button>
+        <button class="btn-primary" (click)="saveSettings()">Save & Connect</button>
+      </div>
+    </div>
+  </div>
+}
